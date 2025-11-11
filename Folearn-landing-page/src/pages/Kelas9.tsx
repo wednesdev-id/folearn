@@ -19,7 +19,7 @@ const Kelas9 = () => {
           <div className="mb-8 fade-in">
             <Link
               to="/#kelas"
-              className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-6"
+              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors mb-6"
             >
               <ArrowLeft className="w-4 h-4" />
               Kembali ke Pilihan Kelas
@@ -42,7 +42,7 @@ const Kelas9 = () => {
               <BookOpen className="w-5 h-5 text-primary" />
               <h2 className="text-2xl font-semibold text-gray-800">Mata Pelajaran Wajib</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {mataPelajaranWajib.map((subject, index) => (
                 <div key={subject.id} style={{ animationDelay: `${index * 100}ms` }} className="fade-in">
                   <SubjectCard
@@ -63,7 +63,7 @@ const Kelas9 = () => {
               <BookOpen className="w-5 h-5 text-primary" />
               <h2 className="text-2xl font-semibold text-gray-800">Mata Pelajaran Pilihan</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 place-items-center max-w-2xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl">
               {mataPelajaranPilihan.map((subject, index) => (
                 <div key={subject.id} style={{ animationDelay: `${(index + 9) * 100}ms` }} className="fade-in">
                   <SubjectCard

@@ -1,42 +1,48 @@
 import { User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import NeomorphCard from "./NeomorphCard";
 import { cn } from "@/lib/utils";
 import { smoothScrollTo } from "@/utils/smoothScroll";
 
 const Header = () => {
   const location = useLocation();
 
+  const isActiveHome = location.pathname === "/" && (!location.hash || location.hash === "");
+  const isActiveMateri = location.hash === "#kelas";
+  const isActiveTentang = location.hash === "#tentang";
+
   const navItems = [
-    { name: "Home", path: "/", active: location.pathname === "/" },
-    { name: "Materi", path: "/", hash: "kelas", active: location.pathname === "/" && location.hash === "#kelas" },
-    { name: "Tentang", path: "/", hash: "tentang", active: location.pathname === "/" && location.hash === "#tentang" },
+    { name: "Home", path: "/", hash: null, active: isActiveHome },
+    { name: "Materi", path: "/", hash: "kelas", active: isActiveMateri },
+    { name: "Tentang", path: "/", hash: "tentang", active: isActiveTentang },
   ];
 
   const handleNavClick = (item: typeof navItems[0]) => {
     if (item.hash) {
       smoothScrollTo(item.hash);
+    } else if (item.name === "Home") {
+      // Scroll to top when Home is clicked
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
-      <NeomorphCard className="flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50">
+      <div className="flex items-center justify-between bg-white shadow-bottom px-6 py-4">
         <div className="flex items-center gap-8">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            EduMuda
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            Folearn
           </h1>
           <nav className="hidden md:flex gap-6">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.path + (item.hash ? `#${item.hash}` : "")}
-                onClick={() => item.hash && handleNavClick(item)}
+                onClick={() => handleNavClick(item)}
                 className={cn(
                   "text-sm font-medium transition-colors duration-200",
                   item.active
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "text-blue-500"
+                    : "text-gray-600 hover:text-blue-500"
                 )}
               >
                 {item.name}
@@ -44,10 +50,10 @@ const Header = () => {
             ))}
           </nav>
         </div>
-        <div className="w-10 h-10 rounded-full neomorph flex items-center justify-center hover:scale-105 transition-transform cursor-pointer">
-          <User className="w-5 h-5 text-primary stroke-[2.5]" />
+        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer">
+          <User className="w-5 h-5 text-blue-500 stroke-[2.5]" />
         </div>
-      </NeomorphCard>
+      </div>
     </header>
   );
 };

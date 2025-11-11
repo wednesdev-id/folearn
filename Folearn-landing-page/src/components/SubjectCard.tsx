@@ -31,14 +31,14 @@ const SubjectCard = ({ title, description, icon, color, isOptional = false, subj
 
   return (
     <Link to={`/subject/${subjectId}`} className="block">
-      <div className="neomorph rounded-xl p-5 hover-lift cursor-pointer group w-[352px] h-[225.25px] flex flex-col md:w-full subject-card-mobile">
+      <div className="neomorph rounded-xl p-5 hover-lift cursor-pointer group w-[352px] h-[225.25px] flex flex-col md:w-full subject-card-mobile hover:ring-2 hover:ring-blue-500 transition-all duration-200">
         <div className="flex items-start gap-3 flex-shrink-0">
           <div className="p-2.5 bg-white rounded-lg neomorph-sm hover-scale flex-shrink-0">
             {getIcon(icon)}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-semibold text-gray-800 group-hover:text-primary transition-colors duration-200 text-sm truncate">
+              <h3 className="font-semibold text-gray-800 group-hover:text-blue-500 transition-colors duration-200 text-sm truncate">
                 {title}
               </h3>
               {isOptional && (

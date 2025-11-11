@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, BookOpen, Clock, Target, Award, Play, Pause, CheckCircle, Volume2, Maximize2 } from "lucide-react";
+import { ArrowLeft, BookOpen, Target, Award, Play, CheckCircle, Volume2, Maximize2 } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
 import { getSubjectById } from "@/data/subjects";
@@ -77,16 +77,6 @@ const LessonContent = () => {
                   Video pembelajaran ini dirancang untuk membantu kamu memahami konsep dasar {lesson.title.toLowerCase()}
                   dengan pendekatan visual yang mudah dipahami. Materi disajikan secara bertahap dengan contoh nyata.
                 </p>
-                <div className="flex items-center gap-4 text-sm text-gray-500">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>{lesson.duration} menit</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Target className="w-4 h-4" />
-                    <span>Tingkat {lesson.difficulty}</span>
-                  </div>
-                </div>
               </NeomorphCard>
 
               {/* Key Points */}
@@ -306,7 +296,7 @@ const LessonContent = () => {
           <div className="mb-8 fade-in">
             <Link
               to={`/subject/${subjectId}/chapter/${chapterId}`}
-              className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-6"
+              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors mb-6"
             >
               <ArrowLeft className="w-4 h-4" />
               Kembali ke {chapter.title}
@@ -323,38 +313,11 @@ const LessonContent = () => {
                 <h1 className="text-2xl font-bold text-gray-800 mb-2">{lesson.title}</h1>
                 <p className="text-gray-600">{lessonContent.description}</p>
 
-                <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>{lesson.duration} menit</span>
-                  </div>
-                  <span>•</span>
-                  <span className="capitalize">{lessonContent.title}</span>
-                  <span>•</span>
-                  <span className="px-2 py-1 bg-gray-100 rounded-full text-xs font-medium">
-                    Pelajaran {lessonIndex + 1} dari {chapter.lessons.length}
-                  </span>
-                </div>
-              </div>
+                              </div>
             </div>
           </div>
 
-          {/* Progress Bar */}
-          <NeomorphCard className="p-4 mb-8">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">Progress Pembelajaran</span>
-              <span className="text-sm text-gray-500">
-                {Math.round((lessonIndex / chapter.lessons.length) * 100)}%
-              </span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-primary h-2 rounded-full transition-all duration-300"
-                style={{ width: `${(lessonIndex / chapter.lessons.length) * 100}%` }}
-              ></div>
-            </div>
-          </NeomorphCard>
-
+          
           {/* Lesson Content */}
           <div className="mb-12 fade-in">
             {lessonContent.content}
@@ -374,19 +337,21 @@ const LessonContent = () => {
               )}
             </div>
 
-            <div className="flex gap-3">
-              <button className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium">
-                <CheckCircle className="w-4 h-4 inline mr-2" />
-                Tandai Selesai
-              </button>
-
-              {lessonIndex < chapter.lessons.length - 1 && (
+            <div>
+              {lessonIndex < chapter.lessons.length - 1 ? (
                 <Link
                   to={`/subject/${subjectId}/chapter/${chapterId}/lesson/${chapter.lessons[lessonIndex + 1].id}`}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-colors font-bold text-lg"
                 >
-                  Pelajaran Selanjutnya
+                  Selanjutnya
                   <ArrowLeft className="w-4 h-4 rotate-180" />
+                </Link>
+              ) : (
+                <Link
+                  to={`/subject/${subjectId}`}
+                  className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-bold"
+                >
+                  Kembali
                 </Link>
               )}
             </div>

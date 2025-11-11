@@ -204,6 +204,10 @@ All colors MUST be HSL.
     white-space: nowrap;
   }
 
+  .shadow-bottom {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
   /* Responsive subject cards */
   @media (max-width: 768px) {
     .subject-card-mobile {

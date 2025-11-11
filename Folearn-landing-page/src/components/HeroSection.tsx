@@ -13,7 +13,7 @@ const HeroSection = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-              Selamat Datang di EduMuda{" "}
+              Selamat Datang di Folearn{" "}
               <span className="inline-block animate-[wave_1s_ease-in-out_infinite]">👋</span>
             </h1>
             <p className="text-lg text-muted-foreground">

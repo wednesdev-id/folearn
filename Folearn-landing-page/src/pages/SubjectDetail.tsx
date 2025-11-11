@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, BookOpen, Target, Award, Clock, Users } from "lucide-react";
+import { ArrowLeft, BookOpen, Target, Award } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
 import { getSubjectById } from "@/data/subjects";
@@ -33,7 +33,7 @@ const SubjectDetail = () => {
           <div className="mb-8 fade-in">
             <Link
               to={`/kelas-${subject.grade}`}
-              className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-6"
+              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors mb-6"
             >
               <ArrowLeft className="w-4 h-4" />
               Kembali ke Kelas {subject.grade}
@@ -112,7 +112,7 @@ const SubjectDetail = () => {
               {subject.learningObjectives.map((objective, index) => (
                 <NeomorphCard key={index} className="p-4">
                   <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <span className="text-xs font-medium text-primary">{index + 1}</span>
                     </div>
                     <p className="text-sm text-gray-700">{objective}</p>
@@ -145,15 +145,9 @@ const SubjectDetail = () => {
 
           {/* Chapters */}
           <section className="mb-12 fade-in">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-primary" />
-                <h2 className="text-2xl font-semibold text-gray-800">Materi Pembelajaran</h2>
-              </div>
-              <span className="text-sm text-gray-500">
-                {subject.chapters.reduce((total, chapter) => total + chapter.lessons.length, 0)} pelajaran •
-                {subject.chapters.reduce((total, chapter) => total + chapter.duration.split(' ')[0], 0)} jam total
-              </span>
+            <div className="flex items-center gap-2 mb-6">
+              <BookOpen className="w-5 h-5 text-primary" />
+              <h2 className="text-2xl font-semibold text-gray-800">Materi Pembelajaran</h2>
             </div>
 
             <div className="space-y-6">
@@ -172,74 +166,17 @@ const SubjectDetail = () => {
                             {chapter.title}
                           </h3>
                         </div>
-                        <p className="text-gray-600 mb-4">{chapter.description}</p>
-
-                        <div className="flex items-center gap-6 text-sm text-gray-500">
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            <span>{chapter.duration}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <BookOpen className="w-4 h-4" />
-                            <span>{chapter.lessons.length} pelajaran</span>
-                          </div>
-                          {chapter.exercises.length > 0 && (
-                            <div className="flex items-center gap-1">
-                              <Award className="w-4 h-4" />
-                              <span>{chapter.exercises.length} latihan</span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Preview Lessons */}
-                        <div className="mt-4 pt-4 border-t border-gray-100">
-                          <p className="text-xs text-gray-500 mb-2">Topik pembelajaran:</p>
-                          <div className="flex flex-wrap gap-2">
-                            {chapter.lessons.slice(0, 3).map((lesson) => (
-                              <span key={lesson.id} className="text-xs px-2 py-1 bg-gray-100 rounded-full">
-                                {lesson.title}
-                              </span>
-                            ))}
-                            {chapter.lessons.length > 3 && (
-                              <span className="text-xs px-2 py-1 bg-gray-100 rounded-full">
-                                +{chapter.lessons.length - 3} lagi
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                        <p className="text-gray-600">{chapter.description}</p>
                       </div>
 
                       <div className="ml-4">
-                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
                           <ArrowLeft className="w-5 h-5 text-primary rotate-180" />
                         </div>
                       </div>
                     </div>
                   </NeomorphCard>
                 </Link>
-              ))}
-            </div>
-          </section>
-
-          {/* Assessment Methods */}
-          <section className="mb-12 fade-in">
-            <div className="flex items-center gap-2 mb-6">
-              <Award className="w-5 h-5 text-primary" />
-              <h2 className="text-2xl font-semibold text-gray-800">Metode Penilaian</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {subject.assessmentMethods.map((method, index) => (
-                <NeomorphCard key={index} className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-primary/20 to-primary/10 rounded-lg flex items-center justify-center">
-                      <Users className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-800">{method}</p>
-                      <p className="text-xs text-gray-500">Metode {index + 1}</p>
-                    </div>
-                  </div>
-                </NeomorphCard>
               ))}
             </div>
           </section>

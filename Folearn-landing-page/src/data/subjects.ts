@@ -1,4 +1,4 @@
-// Data mata pelajaran untuk platform edukasi EduMuda
+// Data mata pelajaran untuk platform edukasi Folearn
 // Struktur data untuk setiap mata pelajaran
 
 export interface SubjectDetail {
