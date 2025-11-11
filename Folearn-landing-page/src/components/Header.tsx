@@ -3,10 +3,12 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { smoothScrollTo } from "@/utils/smoothScroll";
+import ProfileSettings from "./ProfileSettings";
 
 const Header = () => {
   const location = useLocation();
   const [activeSection, setActiveSection] = useState("home");
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // Scroll spy implementation
   useEffect(() => {
@@ -101,10 +103,19 @@ const Header = () => {
             ))}
           </nav>
         </div>
-        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer">
+        <div
+          className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer"
+          onClick={() => setIsProfileOpen(true)}
+        >
           <User className="w-5 h-5 text-blue-500 stroke-[2.5]" />
         </div>
       </div>
+
+      {/* Profile Settings Popup */}
+      <ProfileSettings
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+      />
     </header>
   );
 };
