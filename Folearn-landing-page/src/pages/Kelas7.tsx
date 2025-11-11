@@ -3,79 +3,12 @@ import { ArrowLeft, BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
 import SubjectCard from "@/components/SubjectCard";
+import { getSubjectsByGrade } from "@/data/subjects";
 
 const Kelas7 = () => {
-  const mataPelajaranWajib = [
-    {
-      title: "Pendidikan Agama dan Budi Pekerti",
-      description: "Membentuk karakter berlandaskan nilai-nilai agama dan budi pekerti luhur.",
-      icon: "heart",
-      color: "text-red-500"
-    },
-    {
-      title: "Pendidikan Pancasila",
-      description: "Mempelajari dan mengamalkan nilai-nilai Pancasila dalam kehidupan sehari-hari.",
-      icon: "brain",
-      color: "text-blue-500"
-    },
-    {
-      title: "Bahasa Indonesia",
-      description: "Meningkatkan kemampuan berbahasa Indonesia yang baik dan benar.",
-      icon: "book",
-      color: "text-green-500"
-    },
-    {
-      title: "Matematika",
-      description: "Mempelajari konsep matematika dasar dan problem solving.",
-      icon: "calculator",
-      color: "text-purple-500"
-    },
-    {
-      title: "Ilmu Pengetahuan Alam (IPA)",
-      description: "Eksplorasi dunia sains alam melalui eksperimen dan observasi.",
-      icon: "microscope",
-      color: "text-teal-500"
-    },
-    {
-      title: "Ilmu Pengetahuan Sosial (IPS)",
-      description: "Memahami masyarakat, sejarah, dan lingkungan sosial.",
-      icon: "globe",
-      color: "text-orange-500"
-    },
-    {
-      title: "Bahasa Inggris",
-      description: "Mengembangkan kemampuan berkomunikasi dalam bahasa Inggris.",
-      icon: "languages",
-      color: "text-indigo-500"
-    },
-    {
-      title: "Informatika",
-      description: "Belajar dasar-dasar komputer, coding, dan teknologi digital.",
-      icon: "monitor",
-      color: "text-cyan-500"
-    },
-    {
-      title: "Pendidikan Jasmani, Olahraga, dan Kesehatan",
-      description: "Mengembangkan kebugaran fisik dan gaya hidup sehat.",
-      icon: "dumbbell",
-      color: "text-emerald-500"
-    }
-  ];
-
-  const mataPelajaranPilihan = [
-    {
-      title: "Seni Budaya dan Prakarya",
-      description: "Mengembangkan kreativitas melalui seni, musik, dan keterampilan tangan.",
-      icon: "palette",
-      color: "text-pink-500"
-    },
-    {
-      title: "Muatan Lokal",
-      description: "Mempelajari kearifan lokal dan budaya daerah masing-masing.",
-      icon: "users",
-      color: "text-yellow-600"
-    }
-  ];
+  const kelas7Subjects = getSubjectsByGrade(7);
+  const mataPelajaranWajib = kelas7Subjects.filter(subject => subject.category === 'wajib');
+  const mataPelajaranPilihan = kelas7Subjects.filter(subject => subject.category === 'pilihan');
 
   return (
     <div className="min-h-screen bg-gradient-hero">
@@ -111,8 +44,15 @@ const Kelas7 = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center">
               {mataPelajaranWajib.map((subject, index) => (
-                <div key={subject.title} style={{ animationDelay: `${index * 100}ms` }} className="fade-in">
-                  <SubjectCard {...subject} />
+                <div key={subject.id} style={{ animationDelay: `${index * 100}ms` }} className="fade-in">
+                  <SubjectCard
+                    title={subject.title}
+                    description={subject.description}
+                    icon={subject.icon}
+                    color={subject.color}
+                    isOptional={subject.isOptional}
+                    subjectId={subject.id}
+                  />
                 </div>
               ))}
             </div>
@@ -126,8 +66,15 @@ const Kelas7 = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 place-items-center max-w-2xl mx-auto">
               {mataPelajaranPilihan.map((subject, index) => (
-                <div key={subject.title} style={{ animationDelay: `${(index + 9) * 100}ms` }} className="fade-in">
-                  <SubjectCard {...subject} isOptional={true} />
+                <div key={subject.id} style={{ animationDelay: `${(index + 9) * 100}ms` }} className="fade-in">
+                  <SubjectCard
+                    title={subject.title}
+                    description={subject.description}
+                    icon={subject.icon}
+                    color={subject.color}
+                    isOptional={subject.isOptional}
+                    subjectId={subject.id}
+                  />
                 </div>
               ))}
             </div>
