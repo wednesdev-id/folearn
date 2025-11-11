@@ -1,14 +1,65 @@
 import { User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { smoothScrollTo } from "@/utils/smoothScroll";
 
 const Header = () => {
   const location = useLocation();
+  const [activeSection, setActiveSection] = useState("home");
 
-  const isActiveHome = location.pathname === "/" && (!location.hash || location.hash === "");
-  const isActiveMateri = location.hash === "#kelas";
-  const isActiveTentang = location.hash === "#tentang";
+  // Scroll spy implementation
+  useEffect(() => {
+    if (location.pathname !== "/") return;
+
+    const sections = [
+      { id: "home", element: document.getElementById("home") },
+      { id: "kelas", element: document.getElementById("kelas") },
+      { id: "tentang", element: document.getElementById("tentang") }
+    ];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: "-20% 0px -60% 0px", // Trigger when section is 40% visible
+        threshold: 0
+      }
+    );
+
+    // Also listen to scroll to set active section to "home" when at top
+    const handleScroll = () => {
+      if (window.scrollY < 100) {
+        setActiveSection("home");
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+
+    // Observe all sections
+    sections.forEach(({ element }) => {
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
+    return () => {
+      sections.forEach(({ element }) => {
+        if (element) {
+          observer.unobserve(element);
+        }
+      });
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [location.pathname]);
+
+  const isActiveHome = location.pathname === "/" && activeSection === "home";
+  const isActiveMateri = location.pathname === "/" && activeSection === "kelas";
+  const isActiveTentang = location.pathname === "/" && activeSection === "tentang";
 
   const navItems = [
     { name: "Home", path: "/", hash: null, active: isActiveHome },

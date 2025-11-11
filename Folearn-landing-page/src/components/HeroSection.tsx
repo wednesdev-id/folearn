@@ -8,7 +8,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="pt-32 pb-16 px-6">
+    <section id="home" className="pt-20 md:pt-24 pb-16 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
