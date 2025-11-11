@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { X, User, Mail, Lock, Edit2, Check, Eye, EyeOff } from "lucide-react";
+import { X, User, Mail, Lock, Edit2, Check, Eye, EyeOff, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ProfileSettingsProps {
   isOpen: boolean;
@@ -7,16 +8,18 @@ interface ProfileSettingsProps {
 }
 
 const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
+  const { user, logout } = useAuth();
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [isEditingEmailWithPassword, setIsEditingEmailWithPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Form states
-  const [userName, setUserName] = useState("John Doe");
-  const [userEmail, setUserEmail] = useState("john.doe@example.com");
+  const [userName, setUserName] = useState(user?.name || "");
+  const [userEmail, setUserEmail] = useState(user?.email || "");
   const [tempName, setTempName] = useState(userName);
   const [tempEmail, setTempEmail] = useState(userEmail);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -88,8 +91,14 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center mb-6">
+        <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-800">Profile Settings</h2>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+          >
+            <X className="w-4 h-4 text-gray-600" />
+          </button>
         </div>
 
         {/* Profile Icon */}
@@ -155,50 +164,82 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Email
           </label>
-          <div className="flex items-center gap-2">
-            <div className="flex-1 relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              {isEditingEmail ? (
-                <input
-                  type="email"
-                  value={tempEmail}
-                  onChange={(e) => setTempEmail(e.target.value)}
-                  className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Masukkan email"
-                />
-              ) : (
+          {isEditingEmailWithPassword ? (
+            <div className="space-y-3">
+              {/* Current Password for Email Change */}
+              <div className="flex items-center gap-2">
+                <div className="flex-1 relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type={showCurrentPassword ? "text" : "password"}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Masukkan password saat ini"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  >
+                    {showCurrentPassword ? (
+                      <EyeOff className="w-4 h-4 text-gray-400" />
+                    ) : (
+                      <Eye className="w-4 h-4 text-gray-400" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* New Email */}
+              <div className="flex items-center gap-2">
+                <div className="flex-1 relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="email"
+                    value={tempEmail}
+                    onChange={(e) => setTempEmail(e.target.value)}
+                    className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Masukkan email baru"
+                  />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-2">
+                <button
+                  onClick={handleSaveEmail}
+                  className="flex-1 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                >
+                  Simpan Email
+                </button>
+                <button
+                  onClick={handleCancelEmail}
+                  className="flex-1 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                >
+                  Batal
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <div className="flex-1 relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type="email"
                   value={userEmail}
                   readOnly
                   className="w-full pl-10 pr-10 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700"
                 />
-              )}
-            </div>
-            {isEditingEmail ? (
-              <div className="flex gap-1">
-                <button
-                  onClick={handleSaveEmail}
-                  className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                >
-                  <Check className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={handleCancelEmail}
-                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
               </div>
-            ) : (
               <button
-                onClick={() => setIsEditingEmail(true)}
+                onClick={() => setIsEditingEmailWithPassword(true)}
                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
               >
                 <Edit2 className="w-4 h-4" />
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Password Field */}
@@ -316,11 +357,11 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="mt-6 pt-4 border-t border-gray-200 flex gap-3">
+        <div className="mt-6 pt-4 border-t border-gray-200 space-y-3">
           <button
             onClick={handleSaveAll}
             disabled={!hasChanges}
-            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+            className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
               hasChanges
                 ? 'bg-blue-500 text-white hover:bg-blue-600'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
@@ -328,19 +369,25 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
           >
             Simpan Perubahan
           </button>
+
           <button
             onClick={onClose}
-            className="py-2 px-6 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+            className="w-full py-2 px-6 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
           >
             Batal
           </button>
-        </div>
 
-        {/* Footer Info */}
-        <div className="mt-4">
-          <p className="text-xs text-gray-500 text-center">
-            Klik di luar popup untuk menutup
-          </p>
+          {/* Logout Button */}
+          <button
+            onClick={() => {
+              logout();
+              onClose();
+            }}
+            className="w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium flex items-center justify-center gap-2"
+          >
+            <LogOut className="w-4 h-4" />
+            Keluar
+          </button>
         </div>
       </div>
     </div>

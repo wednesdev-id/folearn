@@ -1,14 +1,17 @@
 import { User } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { smoothScrollTo } from "@/utils/smoothScroll";
 import ProfileSettings from "./ProfileSettings";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("home");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { user, isAuthenticated } = useAuth();
 
   // Scroll spy implementation
   useEffect(() => {
@@ -105,7 +108,13 @@ const Header = () => {
         </div>
         <div
           className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer"
-          onClick={() => setIsProfileOpen(true)}
+          onClick={() => {
+            if (isAuthenticated) {
+              setIsProfileOpen(true);
+            } else {
+              navigate('/login');
+            }
+          }}
         >
           <User className="w-5 h-5 text-blue-500 stroke-[2.5]" />
         </div>
