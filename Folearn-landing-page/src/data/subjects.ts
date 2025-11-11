@@ -30,7 +30,7 @@ export interface Chapter {
 export interface Lesson {
   id: string;
   title: string;
-  type: 'video' | 'reading' | 'interactive' | 'quiz' | 'assignment' | 'practical';
+  type: 'video' | 'reading';
   duration: number; // dalam menit
   content?: string;
   difficulty: 'mudah' | 'sedang' | 'sulit';
@@ -180,7 +180,7 @@ export const kelas7Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Pengertian dan Ciri Teks Deskripsi',
-            type: 'interactive',
+            type: 'video',
             duration: 30,
             difficulty: 'mudah'
           }
@@ -254,7 +254,7 @@ export const kelas7Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Pengamatan Ciri-Ciri Makhluk Hidup',
-            type: 'practical',
+            type: 'reading',
             duration: 40,
             difficulty: 'sedang'
           }
@@ -291,7 +291,7 @@ export const kelas7Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Interaksi Sosial dan Lembaga Sosial',
-            type: 'interactive',
+            type: 'video',
             duration: 35,
             difficulty: 'mudah'
           }
@@ -328,7 +328,7 @@ export const kelas7Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Meeting New People',
-            type: 'interactive',
+            type: 'video',
             duration: 30,
             difficulty: 'mudah'
           }
@@ -365,7 +365,7 @@ export const kelas7Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Komponen Hardware Komputer',
-            type: 'interactive',
+            type: 'video',
             duration: 25,
             difficulty: 'mudah'
           }
@@ -402,7 +402,7 @@ export const kelas7Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Teknik Dribbling dan Passing',
-            type: 'practical',
+            type: 'reading',
             duration: 40,
             difficulty: 'sedang'
           }
@@ -440,7 +440,7 @@ export const kelas7Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Teknik Menggambar Dasar',
-            type: 'practical',
+            type: 'reading',
             duration: 45,
             difficulty: 'mudah'
           }
@@ -478,7 +478,7 @@ export const kelas7Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Sejarah dan Tradisi Lokal',
-            type: 'interactive',
+            type: 'video',
             duration: 30,
             difficulty: 'mudah'
           }
@@ -556,7 +556,7 @@ export const kelas8Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Sistem Demokrasi Indonesia',
-            type: 'interactive',
+            type: 'video',
             duration: 30,
             difficulty: 'sedang'
           }
@@ -593,7 +593,7 @@ export const kelas8Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Struktur dan Kaidah Teks Eksposisi',
-            type: 'interactive',
+            type: 'video',
             duration: 35,
             difficulty: 'sedang'
           }
@@ -667,7 +667,7 @@ export const kelas8Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Struktur dan Fungsi Sistem Otot',
-            type: 'interactive',
+            type: 'video',
             duration: 40,
             difficulty: 'sedang'
           }
@@ -704,7 +704,7 @@ export const kelas8Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Permintaan, Penawaran, dan Harga',
-            type: 'interactive',
+            type: 'video',
             duration: 35,
             difficulty: 'sedang'
           }
@@ -741,7 +741,7 @@ export const kelas8Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Simple Future Tense and Narrative Structure',
-            type: 'interactive',
+            type: 'video',
             duration: 30,
             difficulty: 'sedang'
           }
@@ -778,7 +778,7 @@ export const kelas8Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'HTML dan CSS Structure',
-            type: 'interactive',
+            type: 'video',
             duration: 40,
             difficulty: 'sedang'
           }
@@ -815,7 +815,7 @@ export const kelas8Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Teknik Servis, Passing, dan Smash Voli',
-            type: 'practical',
+            type: 'reading',
             duration: 40,
             difficulty: 'sedang'
           }
@@ -853,7 +853,7 @@ export const kelas8Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Teknik Permainan Alat Musik Tradisional',
-            type: 'practical',
+            type: 'reading',
             duration: 45,
             difficulty: 'sedang'
           }
@@ -891,7 +891,7 @@ export const kelas8Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Identifikasi dan Pengembangan Produk Lokal',
-            type: 'interactive',
+            type: 'video',
             duration: 35,
             difficulty: 'mudah'
           }
@@ -969,7 +969,7 @@ export const kelas9Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Harmoni Nilai Pancasila dan Globalisasi',
-            type: 'interactive',
+            type: 'video',
             duration: 30,
             difficulty: 'sulit'
           }
@@ -1006,7 +1006,7 @@ export const kelas9Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Struktur dan Strategi Argumentasi',
-            type: 'interactive',
+            type: 'video',
             duration: 35,
             difficulty: 'sulit'
           }
@@ -1080,7 +1080,7 @@ export const kelas9Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Struktur Reproduksi dan Hormon',
-            type: 'interactive',
+            type: 'video',
             duration: 40,
             difficulty: 'sulit'
           }
@@ -1117,7 +1117,7 @@ export const kelas9Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Ekonomi Politik Global',
-            type: 'interactive',
+            type: 'video',
             duration: 35,
             difficulty: 'sulit'
           }
@@ -1154,7 +1154,7 @@ export const kelas9Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Presentation Skills and Research Writing',
-            type: 'interactive',
+            type: 'video',
             duration: 40,
             difficulty: 'sulit'
           }
@@ -1191,7 +1191,7 @@ export const kelas9Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'JavaScript Frameworks dan SQL Basics',
-            type: 'interactive',
+            type: 'video',
             duration: 45,
             difficulty: 'sulit'
           }
@@ -1228,7 +1228,7 @@ export const kelas9Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Teknik Coaching dan Mental Health Management',
-            type: 'practical',
+            type: 'reading',
             duration: 40,
             difficulty: 'sedang'
           }
@@ -1266,7 +1266,7 @@ export const kelas9Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Branding dan Pemasaran Produk Seni',
-            type: 'interactive',
+            type: 'video',
             duration: 45,
             difficulty: 'sedang'
           }
@@ -1304,7 +1304,7 @@ export const kelas9Subjects: SubjectDetail[] = [
           {
             id: 'ls1',
             title: 'Strategi Pengembangan Ekonomi Kreatif Lokal',
-            type: 'interactive',
+            type: 'video',
             duration: 35,
             difficulty: 'sedang'
           }

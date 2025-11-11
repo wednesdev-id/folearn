@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, BookOpen, Target, Award, Play, CheckCircle, Volume2, Maximize2 } from "lucide-react";
+import { ArrowLeft, BookOpen, Play, Volume2, Maximize2 } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
 import { getSubjectById } from "@/data/subjects";
@@ -34,7 +34,7 @@ const LessonContent = () => {
         return {
           icon: <Play className="w-8 h-8" />,
           title: 'Video Pembelajaran',
-          description: 'Saksikan video pembelajaran interaktif untuk memahami konsep dengan visual yang menarik.',
+          description: 'Saksikan video pembelajaran untuk memahami konsep dengan penjelasan visual.',
           content: (
             <div className="space-y-6">
               {/* Video Player Placeholder */}
@@ -73,29 +73,10 @@ const LessonContent = () => {
               {/* Video Description */}
               <NeomorphCard className="p-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-3">Deskripsi Video</h3>
-                <p className="text-gray-600 mb-4">
-                  Video pembelajaran ini dirancang untuk membantu kamu memahami konsep dasar {lesson.title.toLowerCase()}
-                  dengan pendekatan visual yang mudah dipahami. Materi disajikan secara bertahap dengan contoh nyata.
+                <p className="text-gray-600">
+                  Video pembelajaran tentang {lesson.title} dengan durasi {lesson.duration} menit
+                  untuk membantu pemahaman konsep secara visual.
                 </p>
-              </NeomorphCard>
-
-              {/* Key Points */}
-              <NeomorphCard className="p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">Poin Pembelajaran Utama</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Memahami konsep fundamental {lesson.title.toLowerCase()}</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Menerapkan konsep dalam contoh nyata</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Mengembangkan pemahaman yang mendalam</span>
-                  </li>
-                </ul>
               </NeomorphCard>
             </div>
           )
@@ -105,7 +86,7 @@ const LessonContent = () => {
         return {
           icon: <BookOpen className="w-8 h-8" />,
           title: 'Materi Bacaan',
-          description: 'Baca materi pembelajaran komprehensif dengan penjelasan detail dan contoh.',
+          description: 'Baca materi pembelajaran komprehensif dengan penjelasan detail.',
           content: (
             <div className="space-y-6">
               {/* Reading Content */}
@@ -117,150 +98,21 @@ const LessonContent = () => {
                   <p className="mb-6 leading-relaxed">
                     Selamat datang dalam pembelajaran {lesson.title.toLowerCase()}. Dalam materi ini,
                     kita akan mempelajari konsep-konsep fundamental yang menjadi dasar untuk memahami
-                    topik yang lebih lanjut. Setiap konsep akan dijelaskan secara detail dengan contoh-contoh
-                    yang relevan untuk memudahkan pemahaman.
+                    topik ini secara mendalam.
                   </p>
 
-                  <h4 className="text-xl font-semibold text-gray-800 mb-4">Konsep Utama</h4>
+                  <h4 className="text-xl font-semibold text-gray-800 mb-4">Materi Pembelajaran</h4>
+                  <p className="mb-6 leading-relaxed">
+                    {lesson.title} merupakan materi penting yang perlu dipahami dengan baik.
+                    Melalui materi ini, kamu akan mempelajari konsep dasar serta penerapannya
+                    dalam konteks pembelajaran yang relevan.
+                  </p>
+
                   <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
                     <p className="font-medium text-blue-800">
-                      <strong>Definisi:</strong> {lesson.title} adalah konsep dasar yang penting
-                      dalam pembelajaran ini. Memahami konsep ini akan membantu kamu dalam menyelesaikan
-                      berbagai masalah terkait.
+                      <strong>Penting:</strong> Pelajari materi ini dengan seksama untuk pemahaman yang lebih baik.
                     </p>
                   </div>
-
-                  <h5 className="text-lg font-semibold text-gray-800 mb-3">Langkah-langkah Pembelajaran:</h5>
-                  <ol className="list-decimal list-inside space-y-3 mb-6">
-                    <li className="leading-relaxed">
-                      <strong>Pengenalan Konsep:</strong> Memahami definisi dan pengertian dasar
-                    </li>
-                    <li className="leading-relaxed">
-                      <strong>Analisis Komponen:</strong> Mengidentifikasi bagian-bagian penting
-                    </li>
-                    <li className="leading-relaxed">
-                      <strong>Implementasi:</strong> Menerapkan konsep dalam contoh nyata
-                    </li>
-                    <li className="leading-relaxed">
-                      <strong>Evaluasi:</strong> Menguji pemahaman melalui latihan
-                    </li>
-                  </ol>
-
-                  <h4 className="text-xl font-semibold text-gray-800 mb-4">Contoh Aplikasi</h4>
-                  <div className="bg-gray-50 rounded-lg p-6 mb-6">
-                    <h5 className="font-semibold text-gray-800 mb-3">Contoh 1:</h5>
-                    <p className="text-gray-700 mb-4">
-                      Misalkan kita memiliki situasi di mana konsep {lesson.title.toLowerCase()}
-                      diterapkan dalam kehidupan sehari-hari. Contoh nyata ini akan membantu kamu
-                      melihat relevansi materi yang dipelajari.
-                    </p>
-                    <div className="bg-white p-4 rounded border border-gray-200">
-                      <p className="text-sm text-gray-600">
-                        <strong>Kasus:</strong> Deskripsi situasi nyata yang dapat diobservasi
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </NeomorphCard>
-
-              {/* Summary */}
-              <NeomorphCard className="p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">Ringkasan</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 bg-green-50 rounded-lg">
-                    <h4 className="font-semibold text-green-800 mb-2">Yang Telah Dipelajari</h4>
-                    <ul className="text-sm text-green-700 space-y-1">
-                      <li>• Konsep dasar {lesson.title.toLowerCase()}</li>
-                      <li>• Langkah-langkah implementasi</li>
-                      <li>• Contoh aplikasi nyata</li>
-                    </ul>
-                  </div>
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <h4 className="font-semibold text-blue-800 mb-2">Kompetensi yang Dikembangkan</h4>
-                    <ul className="text-sm text-blue-700 space-y-1">
-                      <li>• Pemahaman konseptual</li>
-                      <li>• Kemampuan analisis</li>
-                      <li>• Penerapan praktis</li>
-                    </ul>
-                  </div>
-                </div>
-              </NeomorphCard>
-            </div>
-          )
-        };
-
-      case 'interactive':
-        return {
-          icon: <Target className="w-8 h-8" />,
-          title: 'Aktivitas Interaktif',
-          description: 'Ikuti aktivitas pembelajaran interaktif untuk pengalaman belajar yang engaging.',
-          content: (
-            <div className="space-y-6">
-              {/* Interactive Activity */}
-              <NeomorphCard className="p-8">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6">Aktivitas Pembelajaran Interaktif</h3>
-
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 mb-6">
-                  <h4 className="text-xl font-semibold text-gray-800 mb-4">
-                    Eksperimen Virtual: {lesson.title}
-                  </h4>
-                  <p className="text-gray-700 mb-6">
-                    Ikuti langkah-langkah interaktif untuk memahami konsep {lesson.title.toLowerCase()}
-                    melalui simulasi dan eksperimen virtual yang menarik.
-                  </p>
-
-                  {/* Interactive Simulation Area */}
-                  <div className="bg-white rounded-lg border-2 border-gray-200 p-8 text-center">
-                    <div className="mb-6">
-                      <div className="w-32 h-32 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mx-auto mb-4 animate-pulse"></div>
-                      <p className="text-lg font-medium text-gray-700 mb-2">Area Simulasi Interaktif</p>
-                      <p className="text-sm text-gray-500">Klik untuk memulai eksperimen</p>
-                    </div>
-
-                    <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium">
-                      Mulai Simulasi
-                    </button>
-                  </div>
-                </div>
-
-                {/* Step by Step Guide */}
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold text-gray-800">Panduan Langkah demi Langkah</h4>
-                  {['Persiapan', 'Eksperimen', 'Observasi', 'Analisis'].map((step, index) => (
-                    <div key={index} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                      <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
-                        {index + 1}
-                      </div>
-                      <div>
-                        <h5 className="font-semibold text-gray-800 mb-1">Langkah {index + 1}: {step}</h5>
-                        <p className="text-sm text-gray-600">
-                          {index === 0 && 'Siapkan materi dan alat yang diperlukan untuk simulasi.'}
-                          {index === 1 && 'Ikuti instruksi untuk menjalankan eksperimen virtual.'}
-                          {index === 2 && 'Catat hasil dan observasi selama simulasi berlangsung.'}
-                          {index === 3 && 'Analisis data dan tarik kesimpulan dari hasil eksperimen.'}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </NeomorphCard>
-
-              {/* Interactive Tools */}
-              <NeomorphCard className="p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Alat Interaktif</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <button className="p-4 bg-green-100 rounded-lg hover:bg-green-200 transition-colors">
-                    <Target className="w-6 h-6 text-green-600 mx-auto mb-2" />
-                    <p className="text-sm font-medium text-green-800">Kuis Interaktif</p>
-                  </button>
-                  <button className="p-4 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors">
-                    <Play className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-                    <p className="text-sm font-medium text-blue-800">Animasi Konsep</p>
-                  </button>
-                  <button className="p-4 bg-purple-100 rounded-lg hover:bg-purple-200 transition-colors">
-                    <Award className="w-6 h-6 text-purple-600 mx-auto mb-2" />
-                    <p className="text-sm font-medium text-purple-800">Challenge Game</p>
-                  </button>
                 </div>
               </NeomorphCard>
             </div>
