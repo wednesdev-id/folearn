@@ -106,17 +106,30 @@ const Header = () => {
             ))}
           </nav>
         </div>
-        <div
-          className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer"
-          onClick={() => {
-            if (isAuthenticated) {
-              setIsProfileOpen(true);
-            } else {
-              navigate('/login');
-            }
-          }}
-        >
-          <User className="w-5 h-5 text-blue-500 stroke-[2.5]" />
+        <div className="flex items-center gap-3">
+          {isAuthenticated ? (
+            <div
+              className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer"
+              onClick={() => setIsProfileOpen(true)}
+            >
+              <User className="w-5 h-5 text-blue-500 stroke-[2.5]" />
+            </div>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate('/login')}
+                className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium transition-colors"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => navigate('/signup')}
+                className="px-6 py-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white rounded-full hover:shadow-lg transition-all duration-200 font-medium"
+              >
+                Sign Up
+              </button>
+            </>
+          )}
         </div>
       </div>
 

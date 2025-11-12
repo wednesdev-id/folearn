@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { User, Mail, Lock, ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header';
 import NeomorphCard from '@/components/NeomorphCard';
@@ -11,11 +11,15 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, isAuthenticated } = useAuth();
+
+  // Get the intended destination from location state
+  const from = location.state?.from || '/';
 
   // Redirect if already authenticated
   if (isAuthenticated) {
-    navigate('/');
+    navigate(from, { replace: true });
     return null;
   }
 
@@ -27,7 +31,7 @@ const Login = () => {
     try {
       const success = await login(email, password);
       if (success) {
-        navigate('/');
+        navigate(from, { replace: true });
       } else {
         setError('Email atau password salah');
       }
