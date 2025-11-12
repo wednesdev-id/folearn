@@ -1,10 +1,14 @@
 import { Link, useParams } from "react-router-dom";
+import { useEffect } from "react";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
 import { getSubjectById } from "@/data/subjects";
 
 const ChapterDetail = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
   const { subjectId, chapterId } = useParams<{ subjectId: string; chapterId: string }>();
   const subject = getSubjectById(subjectId || '');
   const chapter = subject?.chapters.find(c => c.id === chapterId);

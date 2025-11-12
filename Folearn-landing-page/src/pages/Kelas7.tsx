@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
@@ -6,6 +7,9 @@ import SubjectCard from "@/components/SubjectCard";
 import { getSubjectsByGrade } from "@/data/subjects";
 
 const Kelas7 = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
   const kelas7Subjects = getSubjectsByGrade(7);
   const mataPelajaranWajib = kelas7Subjects.filter(subject => subject.category === 'wajib');
   const mataPelajaranPilihan = kelas7Subjects.filter(subject => subject.category === 'pilihan');

@@ -1,10 +1,14 @@
 import { Link, useParams } from "react-router-dom";
+import { useEffect } from "react";
 import { ArrowLeft, BookOpen, Target, Award } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
 import { getSubjectById } from "@/data/subjects";
 
 const SubjectDetail = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
   const { subjectId } = useParams<{ subjectId: string }>();
   const subject = getSubjectById(subjectId || '');
 
