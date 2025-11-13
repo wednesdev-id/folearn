@@ -90,11 +90,6 @@ const SubjectDetail = () => {
                   <span className={`px-3 py-1 bg-white rounded-full text-sm font-medium ${subject.color}`}>
                     Kelas {subject.grade}
                   </span>
-                  {subject.isOptional && (
-                    <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium">
-                      Mata Pelajaran Pilihan
-                    </span>
-                  )}
                   <span className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm font-medium">
                     {subject.chapters.length} Bab
                   </span>

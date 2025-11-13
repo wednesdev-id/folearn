@@ -10,8 +10,6 @@ const Kelas7 = () => {
   // Scroll to top setiap kali masuk halaman kelas
   useScrollToTop(['kelas-7']);
   const kelas7Subjects = getSubjectsByGrade(7);
-  const mataPelajaranWajib = kelas7Subjects.filter(subject => subject.category === 'wajib');
-  const mataPelajaranPilihan = kelas7Subjects.filter(subject => subject.category === 'pilihan');
 
   return (
     <div className="min-h-screen bg-gradient-hero">
@@ -39,43 +37,20 @@ const Kelas7 = () => {
             </div>
           </div>
 
-          {/* Mata Pelajaran Wajib */}
-          <section className="mb-12">
+          {/* Mata Pelajaran */}
+          <section>
             <div className="flex items-center gap-2 mb-6">
               <BookOpen className="w-5 h-5 text-primary" />
-              <h2 className="text-2xl font-semibold text-gray-800">Mata Pelajaran Wajib</h2>
+              <h2 className="text-2xl font-semibold text-gray-800">Mata Pelajaran Kelas 7</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mataPelajaranWajib.map((subject, index) => (
+              {kelas7Subjects.map((subject, index) => (
                 <div key={subject.id} style={{ animationDelay: `${index * 100}ms` }} className="fade-in">
                   <SubjectCard
                     title={subject.title}
                     description={subject.description}
                     icon={subject.icon}
                     color={subject.color}
-                    isOptional={subject.isOptional}
-                    subjectId={subject.id}
-                  />
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Mata Pelajaran Pilihan */}
-          <section>
-            <div className="flex items-center gap-2 mb-6">
-              <BookOpen className="w-5 h-5 text-primary" />
-              <h2 className="text-2xl font-semibold text-gray-800">Mata Pelajaran Pilihan</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl">
-              {mataPelajaranPilihan.map((subject, index) => (
-                <div key={subject.id} style={{ animationDelay: `${(index + 9) * 100}ms` }} className="fade-in">
-                  <SubjectCard
-                    title={subject.title}
-                    description={subject.description}
-                    icon={subject.icon}
-                    color={subject.color}
-                    isOptional={subject.isOptional}
                     subjectId={subject.id}
                   />
                 </div>
