@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { X, User, Mail, Lock, Edit2, Check, Eye, EyeOff, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import axios from "axios";
 
 interface ProfileSettingsProps {
   isOpen: boolean;
@@ -18,7 +19,7 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Form states
-  const [userName, setUserName] = useState(user?.name || "");
+  const [userName, setUserName] = useState(user?.username || "");
   const [userEmail, setUserEmail] = useState(user?.email || "");
   const [tempName, setTempName] = useState(userName);
   const [tempEmail, setTempEmail] = useState(userEmail);
@@ -108,10 +109,10 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
           </div>
         </div>
 
-        {/* Name Field */}
+        {/* Username Field */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Nama
+            Username
           </label>
           <div className="flex items-center gap-2">
             <div className="flex-1 relative">

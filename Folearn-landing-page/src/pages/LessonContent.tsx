@@ -1,15 +1,16 @@
 import { Link, useParams } from "react-router-dom";
-import { useEffect } from "react";
 import { ArrowLeft, BookOpen, Play, Volume2, Maximize2 } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
 import { getSubjectById } from "@/data/subjects";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 const LessonContent = () => {
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
   const { subjectId, chapterId, lessonId } = useParams<{ subjectId: string; chapterId: string; lessonId: string }>();
+
+  // Scroll to top setiap kali berpindah lesson
+  useScrollToTop([subjectId, chapterId, lessonId]);
+
   const subject = getSubjectById(subjectId || '');
   const chapter = subject?.chapters.find(c => c.id === chapterId);
   const lesson = chapter?.lessons.find(l => l.id === lessonId);

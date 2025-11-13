@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { User, Mail, Lock, ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header';
 import NeomorphCard from '@/components/NeomorphCard';
 import { useAuth } from '@/contexts/AuthContext';
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 const Signup = () => {
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -14,12 +15,10 @@ const Signup = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { signup, isAuthenticated } = useAuth();
+  const { register, isAuthenticated } = useAuth();
 
-  // Scroll to top on component mount
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  // Scroll to top setiap kali masuk halaman signup
+  useScrollToTop(['signup']);
 
   // Get the intended destination from location state
   const from = location.state?.from || '/';
@@ -44,14 +43,27 @@ const Signup = () => {
       return;
     }
 
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Format email tidak valid');
+      return;
+    }
+
+    // Username validation
+    if (username.length < 3) {
+      setError('Username minimal 3 karakter');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const success = await signup(name, email, password);
-      if (success) {
+      const result = await register(username, email, password);
+      if (result.success) {
         navigate(from, { replace: true });
       } else {
-        setError('Pendaftaran gagal, silakan coba lagi');
+        setError(result.message);
       }
     } catch (error) {
       setError('Terjadi kesalahan, silakan coba lagi');
@@ -82,17 +94,17 @@ const Signup = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Name Field */}
+              {/* Username Field */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nama Lengkap
+                  Username
                 </label>
                 <input
                   type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Masukkan nama lengkap"
+                  placeholder="Masukkan username (minimal 3 karakter)"
                   required
                 />
               </div>

@@ -1,15 +1,14 @@
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
 import SubjectCard from "@/components/SubjectCard";
 import { getSubjectsByGrade } from "@/data/subjects";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 const Kelas9 = () => {
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  // Scroll to top setiap kali masuk halaman kelas
+  useScrollToTop(['kelas-9']);
   const kelas9Subjects = getSubjectsByGrade(9);
   const mataPelajaranWajib = kelas9Subjects.filter(subject => subject.category === 'wajib');
   const mataPelajaranPilihan = kelas9Subjects.filter(subject => subject.category === 'pilihan');

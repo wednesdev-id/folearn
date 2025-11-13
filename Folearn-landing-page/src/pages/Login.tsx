@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { User, Mail, Lock, ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header';
 import NeomorphCard from '@/components/NeomorphCard';
 import { useAuth } from '@/contexts/AuthContext';
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,10 +15,8 @@ const Login = () => {
   const location = useLocation();
   const { login, isAuthenticated } = useAuth();
 
-  // Scroll to top on component mount
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  // Scroll to top setiap kali masuk halaman login
+  useScrollToTop(['login']);
 
   // Get the intended destination from location state
   const from = location.state?.from || '/';
@@ -34,11 +33,11 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const success = await login(email, password);
-      if (success) {
+      const result = await login(email, password);
+      if (result.success) {
         navigate(from, { replace: true });
       } else {
-        setError('Email atau password salah');
+        setError(result.message);
       }
     } catch (error) {
       setError('Terjadi kesalahan, silakan coba lagi');
@@ -122,11 +121,11 @@ const Login = () => {
               </button>
             </form>
 
-            {/* Demo Account Info */}
+            {/* Login Help */}
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-800 font-medium mb-2">Akun Demo:</p>
-              <p className="text-sm text-blue-700">Email: user@example.com</p>
-              <p className="text-sm text-blue-700">Password: password123</p>
+              <p className="text-sm text-blue-800 font-medium mb-2">Bantuan Login:</p>
+              <p className="text-sm text-blue-700">Gunakan email dan password yang sudah terdaftar.</p>
+              <p className="text-sm text-blue-700">Belum punya akun? Daftar di halaman signup.</p>
             </div>
 
             {/* Signup Link */}
