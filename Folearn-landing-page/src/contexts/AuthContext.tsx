@@ -64,6 +64,7 @@ interface AuthContextType {
   register: (username: string, email: string, password: string) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
   refreshToken: () => Promise<boolean>;
+  checkUserExistsInDb: (identifier: { email?: string; id?: number }) => Promise<{ exists: boolean; data?: any }>; 
   isAuthenticated: boolean;
   isLoading: boolean;
   isStudent: boolean;
@@ -102,15 +103,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
           });
 
-          if (response.data.data) {
-            const userData = response.data.data;
+          // Normalize response: handle both { id, ... } and { data: { id, ... } }
+          const userData = response.data?.data || response.data;
+          
+          if (userData?.id) {
             const user: User = {
               id: userData.id,
-              username: userData.username,
-              email: userData.email,
-              confirmed: userData.confirmed,
-              blocked: userData.blocked,
-              role: userData.role
+              username: userData.username || '',
+              email: userData.email || '',
+              confirmed: !!userData.confirmed,
+              blocked: !!userData.blocked,
+              role: userData.role || { id: 0, name: 'Authenticated', description: '' }
             };
 
             setUser(user);
@@ -141,13 +144,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const saveAuthData = (response: AuthResponse) => {
     const { jwt, user: userData } = response;
 
+    // Ensure role has default values if missing
+    const role = userData?.role || { id: 0, name: 'Authenticated', description: '' };
+
     const user: User = {
       id: userData.id,
-      username: userData.username,
-      email: userData.email,
-      confirmed: userData.confirmed,
-      blocked: userData.blocked,
-      role: userData.role
+      username: userData.username || '',
+      email: userData.email || '',
+      confirmed: !!userData.confirmed,
+      blocked: !!userData.blocked,
+      role: {
+        id: role.id || 0,
+        name: role.name || 'Authenticated',
+        description: role.description || ''
+      }
     };
 
     // Save to localStorage
@@ -229,15 +239,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       });
 
-      if (response.data.data) {
-        const userData = response.data.data;
+      // Normalize response: handle both { id, ... } and { data: { id, ... } }
+      const userData = response.data?.data || response.data;
+
+      if (userData?.id) {
+        const role = userData?.role || { id: 0, name: 'Authenticated', description: '' };
+        
         const user: User = {
           id: userData.id,
-          username: userData.username,
-          email: userData.email,
-          confirmed: userData.confirmed,
-          blocked: userData.blocked,
-          role: userData.role
+          username: userData.username || '',
+          email: userData.email || '',
+          confirmed: !!userData.confirmed,
+          blocked: !!userData.blocked,
+          role: {
+            id: role.id || 0,
+            name: role.name || 'Authenticated',
+            description: role.description || ''
+          }
         };
 
         setUser(user);
@@ -253,15 +271,53 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  // Check if user record exists in Strapi /users endpoint
+  const checkUserExistsInDb = async (identifier: { email?: string; id?: number }): Promise<{ exists: boolean; data?: any }> => {
+    try {
+      // Use user ID if available (best approach since ID is guaranteed unique)
+      if (identifier.id) {
+        try {
+          const res = await axios.get(`/users/${identifier.id}`);
+          if (res?.data?.id) return { exists: true, data: res.data };
+        } catch (err) {
+          console.error('User not found by ID:', identifier.id);
+          return { exists: false };
+        }
+      }
+
+      // Fallback: filter by email if ID not available
+      if (identifier.email) {
+        try {
+          const q = `/users?filters[email][$eq]=${encodeURIComponent(identifier.email)}&pagination[limit]=1`;
+          const res = await axios.get(q);
+          // Strapi /users endpoint returns array directly or wrapped in data
+          const users = res?.data?.data || res?.data;
+          if (Array.isArray(users) && users.length > 0) {
+            return { exists: true, data: users[0] };
+          }
+        } catch (err) {
+          console.error('User not found by email:', identifier.email);
+        }
+      }
+
+      return { exists: false };
+    } catch (error) {
+      console.error('checkUserExistsInDb error:', error);
+      return { exists: false };
+    }
+  };
+
   const value: AuthContextType = {
     user,
     login,
     register,
     logout,
     refreshToken,
+    checkUserExistsInDb,
     isAuthenticated: !!user,
     isLoading,
-    isStudent: user?.role?.name === 'Authenticated'
+    // Consider user as "student" if authenticated with valid role (not an admin/super-admin)
+    isStudent: !!user?.role?.name
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

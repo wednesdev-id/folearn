@@ -13,7 +13,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, checkUserExistsInDb } = useAuth();
 
   // Scroll to top setiap kali masuk halaman login
   useScrollToTop(['login']);
@@ -35,7 +35,13 @@ const Login = () => {
     try {
       const result = await login(email, password);
       if (result.success) {
-        navigate(from, { replace: true });
+        // After successful login, verify the user record exists in backend
+        const check = await checkUserExistsInDb({ id: (JSON.parse(localStorage.getItem('folearn_user') || '{}') as any)?.id });
+        if (check.exists) {
+          navigate(from, { replace: true });
+        } else {
+          setError('Login sukses tetapi data pengguna tidak ditemukan di database. Silakan hubungi admin.');
+        }
       } else {
         setError(result.message);
       }
