@@ -3,22 +3,50 @@ import { useEffect } from "react";
 import { ArrowLeft, BookOpen, Target, Award } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
-import { getSubjectById } from "@/data/subjects";
+import { useQuery } from "@tanstack/react-query";
+import { fetchSubjectById, toSubjectDetail } from "@/services/strapi";
 
 const SubjectDetail = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
   const { subjectId } = useParams<{ subjectId: string }>();
-  const subject = getSubjectById(subjectId || '');
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['subject', subjectId],
+    queryFn: async () => {
+      if (!subjectId) throw new Error('Subject ID tidak valid');
+      const res = await fetchSubjectById(subjectId);
+      return toSubjectDetail(res.data as any);
+    },
+    enabled: !!subjectId,
+    // Hindari refetch otomatis saat fokus yang sering memicu ERR_ABORTED pada dev
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60,
+  });
 
-  if (!subject) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-hero">
         <Header />
         <main className="pt-24 pb-16">
           <div className="max-w-4xl mx-auto px-6 text-center">
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">Mata Pelajaran Tidak Ditemukan</h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-4">Memuat detail mata pelajaran...</h1>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="min-h-screen bg-gradient-hero">
+        <Header />
+        <main className="pt-24 pb-16">
+          <div className="max-w-4xl mx-auto px-6 text-center">
+            <h1 className="text-2xl font-bold text-gray-800 mb-4">Gagal memuat mata pelajaran</h1>
+            {isError && (
+              <p className="text-red-600 mb-3">{(error as Error)?.message}</p>
+            )}
             <Link to="/#kelas" className="text-primary hover:text-primary/80">
               Kembali ke Pilihan Kelas
             </Link>
@@ -28,6 +56,7 @@ const SubjectDetail = () => {
     );
   }
 
+  const subject = data;
   return (
     <div className="min-h-screen bg-gradient-hero">
       <Header />
@@ -36,7 +65,7 @@ const SubjectDetail = () => {
           {/* Header */}
           <div className="mb-8 fade-in">
             <Link
-              to={`/kelas-${subject.grade}`}
+              to={subject.classSlug ? `/${subject.classSlug}` : `/kelas-${subject.grade}`}
               className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors mb-6"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -133,17 +162,28 @@ const SubjectDetail = () => {
               <h2 className="text-2xl font-semibold text-gray-800">Kompetensi yang Dikembangkan</h2>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {subject.skills.map((skill, index) => (
-                <NeomorphCard key={index} className="p-4 text-center">
-                  <div className="text-2xl mb-2">
-                    {skill.includes('Math') || skill.includes('Algebra') ? '🔢' :
-                     skill.includes('Language') || skill.includes('Grammar') ? '📝' :
-                     skill.includes('Science') || skill.includes('Analysis') ? '🔍' :
-                     skill.includes('Digital') || skill.includes('Technology') ? '💻' : '🎯'}
-                  </div>
-                  <p className="text-xs text-gray-700 font-medium">{skill}</p>
-                </NeomorphCard>
-              ))}
+              {(subject as any).skillsWithIcon?.length ? (
+                (subject as any).skillsWithIcon.map((skill: { text: string; icon?: string }, index: number) => (
+                  <NeomorphCard key={index} className="p-4 text-center">
+                    <div className="text-2xl mb-2">
+                      {skill.icon || '🎯'}
+                    </div>
+                    <p className="text-xs text-gray-700 font-medium">{skill.text}</p>
+                  </NeomorphCard>
+                ))
+              ) : (
+                subject.skills.map((skill, index) => (
+                  <NeomorphCard key={index} className="p-4 text-center">
+                    <div className="text-2xl mb-2">
+                      {skill.includes('Math') || skill.includes('Algebra') ? '🔢' :
+                       skill.includes('Language') || skill.includes('Grammar') ? '📝' :
+                       skill.includes('Science') || skill.includes('Analysis') ? '🔍' :
+                       skill.includes('Digital') || skill.includes('Technology') ? '💻' : '🎯'}
+                    </div>
+                    <p className="text-xs text-gray-700 font-medium">{skill}</p>
+                  </NeomorphCard>
+                ))
+              )}
             </div>
           </section>
 
@@ -158,7 +198,7 @@ const SubjectDetail = () => {
               {subject.chapters.map((chapter, index) => (
                 <Link
                   key={chapter.id}
-                  to={`/subject/${subject.id}/chapter/${chapter.id}`}
+                  to={`/subject/${subject.slug || subject.id}/${chapter.slug || chapter.id}`}
                   className="block"
                 >
                   <NeomorphCard className="p-6 hover-lift cursor-pointer">

@@ -3,24 +3,52 @@ import { useEffect } from "react";
 import { ArrowLeft, BookOpen, Play, Volume2, Maximize2 } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
-import { getSubjectById } from "@/data/subjects";
+import { useQuery } from "@tanstack/react-query";
+import { fetchSubjectById, toSubjectDetail } from "@/services/strapi";
 
 const LessonContent = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
   const { subjectId, chapterId, lessonId } = useParams<{ subjectId: string; chapterId: string; lessonId: string }>();
-  const subject = getSubjectById(subjectId || '');
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['subject', subjectId],
+    queryFn: async () => {
+      if (!subjectId) throw new Error('Subject ID tidak valid');
+      const res = await fetchSubjectById(subjectId);
+      return toSubjectDetail(res.data as any);
+    },
+    enabled: !!subjectId,
+  });
+
+  const subject = data;
   const chapter = subject?.chapters.find(c => c.id === chapterId);
   const lesson = chapter?.lessons.find(l => l.id === lessonId);
 
-  if (!subject || !chapter || !lesson) {
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-hero">
+        <Header />
+        <main className="pt-24 pb-16">
+          <div className="max-w-4xl mx-auto px-6 text-center">
+            <h1 className="text-2xl font-bold text-gray-800 mb-4">Memuat pelajaran...</h1>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (isError || !subject || !chapter || !lesson) {
     return (
       <div className="min-h-screen bg-gradient-hero">
         <Header />
         <main className="pt-24 pb-16">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h1 className="text-2xl font-bold text-gray-800 mb-4">Pelajaran Tidak Ditemukan</h1>
+            {isError && (
+              <p className="text-red-600 mb-3">{(error as Error)?.message}</p>
+            )}
             <Link to={`/subject/${subjectId}/chapter/${chapterId}`} className="text-primary hover:text-primary/80">
               Kembali ke Bab
             </Link>

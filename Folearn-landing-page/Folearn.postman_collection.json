@@ -1,0 +1,922 @@
+{
+  "info": {
+    "name": "Folearn Backend API",
+    "description": "Postman collection untuk API Strapi pada project folearn-backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (Auth Local)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/local",
+              "host": ["{{base_url}}"],
+              "path": ["api","auth","local"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"admin@example.com\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Classes",
+      "item": [
+        {
+          "name": "List Classes",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/classes?populate=*",
+              "host": ["{{base_url}}"],
+              "path": ["api","classes"],
+              "query": [
+                { "key": "populate", "value": "*" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Class by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/classes/:id?populate=*",
+              "host": ["{{base_url}}"],
+              "path": ["api","classes",":id"],
+              "query": [
+                { "key": "populate", "value": "*" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Class",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/classes",
+              "host": ["{{base_url}}"],
+              "path": ["api","classes"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"nama_kelas\": \"X IPA 1\",\n    \"slug\": \"x-ipa-1\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Class (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/classes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api","classes",":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"nama_kelas\": \"X IPA 2\",\n    \"slug\": \"x-ipa-2\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Partial Update Class (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/classes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api","classes",":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"nama_kelas\": \"X IPA 1A\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Class",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/classes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api","classes",":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subjects",
+      "item": [
+        {
+          "name": "List Subjects",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subjects?populate=*",
+              "host": ["{{base_url}}"],
+              "path": ["api","subjects"],
+              "query": [
+                { "key": "populate", "value": "*" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Subject by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subjects/:id?populate=*",
+              "host": ["{{base_url}}"],
+              "path": ["api","subjects",":id"],
+              "query": [
+                { "key": "populate", "value": "*" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Subject",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subjects",
+              "host": ["{{base_url}}"],
+              "path": ["api","subjects"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"nama_mapel\": \"Matematika\",\n    \"slug\": \"matematika\",\n    \"deskripsi\": \"Deskripsi singkat mata pelajaran\",\n    \"katergori_mapel\": \"Wajib/Lokal\",\n    \"class\": 1,\n    \"tujuan_pembelajaran\": [{ \"isi_tujuan\": \"Siswa memahami konsep dasar\" }],\n    \"kompetensi_yang_dikembangkan\": [{ \"isi_kompetensi\": \"Berpikir kritis\" }]\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Subject (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subjects/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api","subjects",":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"deskripsi\": \"Deskripsi diperbarui\",\n    \"katergori_mapel\": \"Pilihan/Tambahan\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Partial Update Subject (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subjects/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api","subjects",":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"nama_mapel\": \"Matematika Lanjutan\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Subject",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subjects/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api","subjects",":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Materials",
+      "item": [
+        {
+          "name": "List Materials",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/materials?populate=*",
+              "host": ["{{base_url}}"],
+              "path": ["api","materials"],
+              "query": [
+                { "key": "populate", "value": "*" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Material by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/materials/:id?populate=*",
+              "host": ["{{base_url}}"],
+              "path": ["api","materials",":id"],
+              "query": [
+                { "key": "populate", "value": "*" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Material",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/materials",
+              "host": ["{{base_url}}"],
+              "path": ["api","materials"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"nama_materi\": \"Persamaan Linear\",\n    \"slug\": \"persamaan-linear\",\n    \"deskripsi_materi\": \"Materi tentang persamaan linear\",\n    \"is_published\": true,\n    \"subject\": 1\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Material (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/materials/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api","materials",":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"deskripsi_materi\": \"Materi diperbarui\",\n    \"is_published\": false\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Partial Update Material (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/materials/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api","materials",":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"nama_materi\": \"Persamaan Linear (Revisi)\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Material",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/materials/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api","materials",":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sub Materials",
+      "item": [
+        {
+          "name": "List Sub Materials",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sub-materials?populate=*",
+              "host": ["{{base_url}}"],
+              "path": ["api","sub-materials"],
+              "query": [
+                { "key": "populate", "value": "*" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Sub Material by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sub-materials/:id?populate=*",
+              "host": ["{{base_url}}"],
+              "path": ["api","sub-materials",":id"],
+              "query": [
+                { "key": "populate", "value": "*" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Sub Material",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sub-materials",
+              "host": ["{{base_url}}"],
+              "path": ["api","sub-materials"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"nama_sub_materi\": \"Pendahuluan\",\n    \"slug\": \"pendahuluan\",\n    \"konten\": \"Konten awal\",\n    \"video_link\": \"https://example.com\",\n    \"no_urut\": 1,\n    \"material\": 1\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Sub Material (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sub-materials/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api","sub-materials",":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"no_urut\": 2\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Partial Update Sub Material (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sub-materials/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api","sub-materials",":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"video_link\": \"https://example.com/revisi\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Sub Material",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sub-materials/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api","sub-materials",":id"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:1337" },
+    { "key": "jwt", "value": "" }
+  ]
+,
+  "successResponses": {
+    "Auth": {
+      "POST /api/auth/local": {
+        "status": 200,
+        "body": {
+          "jwt": "eyJhbGciOi...",
+          "user": {
+            "id": 1,
+            "username": "admin",
+            "email": "admin@example.com"
+          }
+        }
+      }
+    },
+    "Classes": {
+      "GET /api/classes": {
+        "status": 200,
+        "body": {
+          "data": [
+            {
+              "id": 1,
+              "attributes": {
+                "nama_kelas": "X IPA 1",
+                "slug": "x-ipa-1",
+                "createdAt": "2025-01-01T00:00:00.000Z",
+                "updatedAt": "2025-01-01T00:00:00.000Z",
+                "publishedAt": "2025-01-01T00:00:00.000Z",
+                "subjects": {
+                  "data": [
+                    { "id": 5, "attributes": { "nama_mapel": "Matematika" } }
+                  ]
+                }
+              }
+            }
+          ],
+          "meta": {
+            "pagination": { "page": 1, "pageSize": 25, "pageCount": 1, "total": 1 }
+          }
+        }
+      },
+      "GET /api/classes/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "nama_kelas": "X IPA 1",
+              "slug": "x-ipa-1",
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T00:00:00.000Z",
+              "publishedAt": "2025-01-01T00:00:00.000Z"
+            }
+          },
+          "meta": {}
+        }
+      },
+      "POST /api/classes": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 2,
+            "attributes": {
+              "nama_kelas": "X IPA 2",
+              "slug": "x-ipa-2",
+              "createdAt": "2025-01-01T01:00:00.000Z",
+              "updatedAt": "2025-01-01T01:00:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      },
+      "PUT /api/classes/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "nama_kelas": "X IPA 2",
+              "slug": "x-ipa-2",
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T02:00:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      },
+      "PATCH /api/classes/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "nama_kelas": "X IPA 1A",
+              "slug": "x-ipa-1",
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T02:30:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      },
+      "DELETE /api/classes/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "nama_kelas": "X IPA 1",
+              "slug": "x-ipa-1",
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T00:00:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      }
+    },
+    "Subjects": {
+      "GET /api/subjects": {
+        "status": 200,
+        "body": {
+          "data": [
+            {
+              "id": 5,
+              "attributes": {
+                "nama_mapel": "Matematika",
+                "slug": "matematika",
+                "deskripsi": "Deskripsi singkat mata pelajaran",
+                "katergori_mapel": "Wajib/Lokal",
+                "createdAt": "2025-01-01T00:00:00.000Z",
+                "updatedAt": "2025-01-01T00:00:00.000Z",
+                "publishedAt": "2025-01-01T00:00:00.000Z",
+                "icon": { "data": null },
+                "class": { "data": { "id": 1, "attributes": { "nama_kelas": "X IPA 1" } } },
+                "materials": { "data": [] },
+                "tujuan_pembelajaran": [ { "id": 1, "isi_tujuan": "Siswa memahami konsep dasar" } ],
+                "kompetensi_yang_dikembangkan": [ { "id": 1, "isi_kompetensi": "Berpikir kritis", "icon_kompetensi": { "data": null } } ]
+              }
+            }
+          ],
+          "meta": {
+            "pagination": { "page": 1, "pageSize": 25, "pageCount": 1, "total": 1 }
+          }
+        }
+      },
+      "GET /api/subjects/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 5,
+            "attributes": {
+              "nama_mapel": "Matematika",
+              "slug": "matematika",
+              "deskripsi": "Deskripsi singkat mata pelajaran",
+              "katergori_mapel": "Wajib/Lokal",
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T00:00:00.000Z",
+              "publishedAt": "2025-01-01T00:00:00.000Z"
+            }
+          },
+          "meta": {}
+        }
+      },
+      "POST /api/subjects": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 6,
+            "attributes": {
+              "nama_mapel": "Matematika",
+              "slug": "matematika",
+              "deskripsi": "Deskripsi singkat mata pelajaran",
+              "katergori_mapel": "Wajib/Lokal",
+              "createdAt": "2025-01-01T01:00:00.000Z",
+              "updatedAt": "2025-01-01T01:00:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      },
+      "PUT /api/subjects/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 5,
+            "attributes": {
+              "deskripsi": "Deskripsi diperbarui",
+              "katergori_mapel": "Pilihan/Tambahan",
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T02:00:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      },
+      "PATCH /api/subjects/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 5,
+            "attributes": {
+              "nama_mapel": "Matematika Lanjutan",
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T02:30:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      },
+      "DELETE /api/subjects/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 5,
+            "attributes": {
+              "nama_mapel": "Matematika",
+              "slug": "matematika"
+            }
+          },
+          "meta": {}
+        }
+      }
+    },
+    "Materials": {
+      "GET /api/materials": {
+        "status": 200,
+        "body": {
+          "data": [
+            {
+              "id": 10,
+              "attributes": {
+                "nama_materi": "Persamaan Linear",
+                "slug": "persamaan-linear",
+                "deskripsi_materi": "Materi tentang persamaan linear",
+                "is_published": true,
+                "createdAt": "2025-01-01T00:00:00.000Z",
+                "updatedAt": "2025-01-01T00:00:00.000Z",
+                "publishedAt": "2025-01-01T00:00:00.000Z",
+                "subject": { "data": { "id": 5, "attributes": { "nama_mapel": "Matematika" } } },
+                "sub_materials": { "data": [] }
+              }
+            }
+          ],
+          "meta": {
+            "pagination": { "page": 1, "pageSize": 25, "pageCount": 1, "total": 1 }
+          }
+        }
+      },
+      "GET /api/materials/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 10,
+            "attributes": {
+              "nama_materi": "Persamaan Linear",
+              "slug": "persamaan-linear",
+              "deskripsi_materi": "Materi tentang persamaan linear",
+              "is_published": true,
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T00:00:00.000Z",
+              "publishedAt": "2025-01-01T00:00:00.000Z"
+            }
+          },
+          "meta": {}
+        }
+      },
+      "POST /api/materials": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 11,
+            "attributes": {
+              "nama_materi": "Persamaan Linear",
+              "slug": "persamaan-linear",
+              "deskripsi_materi": "Materi tentang persamaan linear",
+              "is_published": true,
+              "createdAt": "2025-01-01T01:00:00.000Z",
+              "updatedAt": "2025-01-01T01:00:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      },
+      "PUT /api/materials/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 10,
+            "attributes": {
+              "deskripsi_materi": "Materi diperbarui",
+              "is_published": false,
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T02:00:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      },
+      "PATCH /api/materials/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 10,
+            "attributes": {
+              "nama_materi": "Persamaan Linear (Revisi)",
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T02:30:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      },
+      "DELETE /api/materials/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 10,
+            "attributes": {
+              "nama_materi": "Persamaan Linear",
+              "slug": "persamaan-linear"
+            }
+          },
+          "meta": {}
+        }
+      }
+    },
+    "Sub Materials": {
+      "GET /api/sub-materials": {
+        "status": 200,
+        "body": {
+          "data": [
+            {
+              "id": 20,
+              "attributes": {
+                "nama_sub_materi": "Pendahuluan",
+                "slug": "pendahuluan",
+                "konten": "Konten awal",
+                "video_link": "https://example.com",
+                "no_urut": 1,
+                "createdAt": "2025-01-01T00:00:00.000Z",
+                "updatedAt": "2025-01-01T00:00:00.000Z",
+                "publishedAt": "2025-01-01T00:00:00.000Z",
+                "material": { "data": { "id": 10, "attributes": { "nama_materi": "Persamaan Linear" } } },
+                "lampiran": { "data": [] }
+              }
+            }
+          ],
+          "meta": {
+            "pagination": { "page": 1, "pageSize": 25, "pageCount": 1, "total": 1 }
+          }
+        }
+      },
+      "GET /api/sub-materials/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 20,
+            "attributes": {
+              "nama_sub_materi": "Pendahuluan",
+              "slug": "pendahuluan",
+              "konten": "Konten awal",
+              "video_link": "https://example.com",
+              "no_urut": 1,
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T00:00:00.000Z",
+              "publishedAt": "2025-01-01T00:00:00.000Z"
+            }
+          },
+          "meta": {}
+        }
+      },
+      "POST /api/sub-materials": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 21,
+            "attributes": {
+              "nama_sub_materi": "Pendahuluan",
+              "slug": "pendahuluan",
+              "konten": "Konten awal",
+              "video_link": "https://example.com",
+              "no_urut": 1,
+              "createdAt": "2025-01-01T01:00:00.000Z",
+              "updatedAt": "2025-01-01T01:00:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      },
+      "PUT /api/sub-materials/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 20,
+            "attributes": {
+              "no_urut": 2,
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T02:00:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      },
+      "PATCH /api/sub-materials/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 20,
+            "attributes": {
+              "video_link": "https://example.com/revisi",
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2025-01-01T02:30:00.000Z",
+              "publishedAt": null
+            }
+          },
+          "meta": {}
+        }
+      },
+      "DELETE /api/sub-materials/:id": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": 20,
+            "attributes": {
+              "nama_sub_materi": "Pendahuluan",
+              "slug": "pendahuluan"
+            }
+          },
+          "meta": {}
+        }
+      }
+    }
+  }
+}

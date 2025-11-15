@@ -22,11 +22,12 @@ const Login = () => {
   // Get the intended destination from location state
   const from = location.state?.from || '/';
 
-  // Redirect if already authenticated
-  if (isAuthenticated) {
-    navigate(from, { replace: true });
-    return null;
-  }
+  // Redirect jika sudah login (pindahkan dari render ke useEffect)
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, from, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,19 +70,19 @@ const Login = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Email Field */}
+              {/* Identifier Field (Email or Username) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
+                  Email atau Username
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
-                    type="email"
+                    type="text"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Masukkan email"
+                    placeholder="Masukkan email atau username"
                     required
                   />
                 </div>

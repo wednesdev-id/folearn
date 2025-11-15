@@ -1,16 +1,19 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { registerUser, updateUserNama, loginUser } from '@/services/strapi';
 
 interface User {
   id: string;
   name: string;
+  username?: string;
   email: string;
   avatar?: string;
+  jwt?: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
-  signup: (name: string, email: string, password: string) => Promise<boolean>;
+  login: (emailOrUsername: string, password: string) => Promise<boolean>;
+  signup: (username: string, email: string, password: string, name?: string) => Promise<boolean>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
   isAuthenticated: boolean;
@@ -49,56 +52,70 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    // Mock login validation - in real app, this would be an API call
-    const mockUsers = [
-      { email: 'user@example.com', password: 'password123', name: 'John Doe' },
-      { email: 'student@folearn.com', password: 'password123', name: 'Student User' }
-    ];
-
-    const foundUser = mockUsers.find(u => u.email === email && u.password === password);
-
-    if (foundUser) {
+  const login = async (emailOrUsername: string, password: string): Promise<boolean> => {
+    const identifier = emailOrUsername.trim();
+    if (!identifier || !password) return false;
+    try {
+      const response = await loginUser({ identifier, password });
+      const { user: strapiUser, jwt } = response;
       const userData: User = {
-        id: Date.now().toString(),
-        name: foundUser.name,
-        email: foundUser.email
+        id: (strapiUser?.id ?? Date.now()).toString(),
+        name: strapiUser?.nama ?? strapiUser?.username ?? identifier,
+        username: strapiUser?.username,
+        email: strapiUser?.email,
+        jwt,
       };
-
       setUser(userData);
       localStorage.setItem('folearn_user', JSON.stringify(userData));
+      if (jwt) localStorage.setItem('folearn_jwt', jwt);
       return true;
+    } catch (err) {
+      console.error('Login gagal:', err);
+      return false;
     }
-
-    return false;
   };
 
-  const signup = async (name: string, email: string, password: string): Promise<boolean> => {
-    // Mock signup validation - in real app, this would be an API call
+  const signup = async (username: string, email: string, password: string, name?: string): Promise<boolean> => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(email) || password.length < 6 || !username.trim()) {
       return false;
     }
+    try {
+      // Register hanya kirim field valid: username, email, password
+      const response = await registerUser({ username, email, password });
+      let { user: strapiUser, jwt } = response;
 
-    if (password.length < 6) {
+      // Jika nama diisi, lakukan update nama pada user yang baru dibuat
+      if (name && jwt && strapiUser?.id) {
+        try {
+          const updatedUser = await updateUserNama(strapiUser.id, jwt, name);
+          // Strapi v4 mengembalikan objek user yang sudah di-update
+          strapiUser = updatedUser;
+        } catch (e) {
+          console.warn('Gagal mengupdate nama user di Strapi:', e);
+        }
+      }
+      const userData: User = {
+        id: (strapiUser?.id ?? Date.now()).toString(),
+        name: strapiUser?.nama ?? name ?? strapiUser?.username ?? username,
+        username: strapiUser?.username ?? username,
+        email: strapiUser?.email ?? email,
+        jwt,
+      };
+      setUser(userData);
+      localStorage.setItem('folearn_user', JSON.stringify(userData));
+      if (jwt) localStorage.setItem('folearn_jwt', jwt);
+      return true;
+    } catch (err) {
+      console.error('Signup gagal:', err);
       return false;
     }
-
-    const userData: User = {
-      id: Date.now().toString(),
-      name,
-      email
-    };
-
-    setUser(userData);
-    localStorage.setItem('folearn_user', JSON.stringify(userData));
-    return true;
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('folearn_user');
+    localStorage.removeItem('folearn_jwt');
   };
 
   const updateUser = (userData: Partial<User>) => {

@@ -12,6 +12,8 @@ import Kelas8 from "./pages/Kelas8";
 import Kelas9 from "./pages/Kelas9";
 import SubjectDetail from "./pages/SubjectDetail";
 import ChapterDetail from "./pages/ChapterDetail";
+import MaterialDetail from "./pages/MaterialDetail";
+import SubMaterialDetail from "./pages/SubMaterialDetail";
 import LessonContent from "./pages/LessonContent";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
@@ -51,6 +53,17 @@ const App = () => (
             <Route path="/subject/:subjectId" element={
               <ProtectedRoute>
                 <SubjectDetail />
+              </ProtectedRoute>
+            } />
+            {/* New Material route using subject and material slugs */}
+            <Route path="/subject/:subjectSlug/:materialSlug" element={
+              <ProtectedRoute>
+                <MaterialDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/subject/:subjectSlug/:materialSlug/sub/:subId" element={
+              <ProtectedRoute>
+                <SubMaterialDetail />
               </ProtectedRoute>
             } />
             <Route path="/subject/:subjectId/chapter/:chapterId" element={
