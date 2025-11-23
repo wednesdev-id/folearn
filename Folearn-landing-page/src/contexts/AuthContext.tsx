@@ -1,13 +1,34 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { registerUser, updateUserNama, loginUser } from '@/services/strapi';
+import axios from 'axios';
 
-// API Configuration
-const API_BASE_URL = 'http://localhost:1337/api';
+// API Configuration - membaca dari environment variables (konsisten dengan strapi.ts)
+const RAW_BASE = import.meta.env.VITE_STRAPI_URL || import.meta.env.VITE_API_URL || '';
+const BASE_URL = String(RAW_BASE).replace(/\/$/, '');
+// Jika BASE_URL kosong, gunakan default untuk development
+const API_BASE_URL = BASE_URL 
+  ? (BASE_URL.endsWith('/api') ? BASE_URL : `${BASE_URL}/api`)
+  : 'http://localhost:1337/api';
 
 // Configure axios defaults
 axios.defaults.baseURL = API_BASE_URL;
 
 // Types
+interface User {
+  id: string | number;
+  name?: string;
+  username?: string;
+  email?: string;
+  jwt?: string;
+  confirmed?: boolean;
+  blocked?: boolean;
+  role?: {
+    id: number;
+    name: string;
+    description?: string;
+  };
+}
+
 interface StudentUser {
   id: number;
   documentId: string;
@@ -70,6 +91,14 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Helper function to clear auth data
+  const clearAuthData = () => {
+    setUser(null);
+    localStorage.removeItem('folearn_user');
+    localStorage.removeItem('folearn_jwt');
+    delete axios.defaults.headers.common['Authorization'];
+  };
 
   // Check for existing session on mount
   useEffect(() => {
@@ -178,9 +207,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem('folearn_user');
-    localStorage.removeItem('folearn_jwt');
+    clearAuthData();
   };
 
   const refreshToken = async (): Promise<boolean> => {
@@ -265,7 +292,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const value: AuthContextType = {
     user,
     login,
-    register,
+    signup,
     logout,
     refreshToken,
     checkUserExistsInDb,
