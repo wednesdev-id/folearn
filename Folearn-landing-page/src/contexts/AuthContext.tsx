@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import axios, { AxiosError } from 'axios';
+import { registerUser, updateUserNama, loginUser } from '@/services/strapi';
 
 // API Configuration
 const API_BASE_URL = 'http://localhost:1337/api';
@@ -35,33 +35,16 @@ interface AuthResponse {
 interface AuthError {
   status: number;
   name: string;
-  message: string;
-  details?: {
-    errors: Array<{
-      path: string[];
-      message: string;
-      name: string;
-    }>;
-  };
-}
-
-interface User {
-  id: number;
-  username: string;
+  username?: string;
   email: string;
-  confirmed: boolean;
-  blocked: boolean;
-  role: {
-    id: number;
-    name: string;
-    description: string;
-  };
+  avatar?: string;
+  jwt?: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<{ success: boolean; message: string }>;
-  register: (username: string, email: string, password: string) => Promise<{ success: boolean; message: string }>;
+  login: (emailOrUsername: string, password: string) => Promise<boolean>;
+  signup: (username: string, email: string, password: string, name?: string) => Promise<boolean>;
   logout: () => void;
   refreshToken: () => Promise<boolean>;
   checkUserExistsInDb: (identifier: { email?: string; id?: number }) => Promise<{ exists: boolean; data?: any }>; 
@@ -134,98 +117,70 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     initializeAuth();
   }, []);
 
-  const clearAuthData = () => {
-    localStorage.removeItem('folearn_jwt');
-    localStorage.removeItem('folearn_user');
-    delete axios.defaults.headers.common['Authorization'];
-    setUser(null);
-  };
-
-  const saveAuthData = (response: AuthResponse) => {
-    const { jwt, user: userData } = response;
-
-    // Ensure role has default values if missing
-    const role = userData?.role || { id: 0, name: 'Authenticated', description: '' };
-
-    const user: User = {
-      id: userData.id,
-      username: userData.username || '',
-      email: userData.email || '',
-      confirmed: !!userData.confirmed,
-      blocked: !!userData.blocked,
-      role: {
-        id: role.id || 0,
-        name: role.name || 'Authenticated',
-        description: role.description || ''
-      }
-    };
-
-    // Save to localStorage
-    localStorage.setItem('folearn_jwt', jwt);
-    localStorage.setItem('folearn_user', JSON.stringify(user));
-
-    // Set axios default header
-    axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
-
-    // Update state
-    setUser(user);
-  };
-
-  const register = async (username: string, email: string, password: string): Promise<{ success: boolean; message: string }> => {
+  const login = async (emailOrUsername: string, password: string): Promise<boolean> => {
+    const identifier = emailOrUsername.trim();
+    if (!identifier || !password) return false;
     try {
-      const response = await axios.post<AuthResponse>('/auth/local/register', {
-        username,
-        email,
-        password
-      });
-
-      saveAuthData(response.data);
-      return { success: true, message: 'Registrasi berhasil!' };
-
-    } catch (error) {
-      const axiosError = error as AxiosError<AuthError>;
-
-      if (axiosError.response?.status === 422) {
-        const details = axiosError.response.data.details?.errors;
-        if (details) {
-          const errorMessages = details.map(err => err.message).join(', ');
-          return { success: false, message: `Validasi gagal: ${errorMessages}` };
-        }
-      }
-
-      const message = axiosError.response?.data?.message || 'Registrasi gagal. Silakan coba lagi.';
-      return { success: false, message };
+      const response = await loginUser({ identifier, password });
+      const { user: strapiUser, jwt } = response;
+      const userData: User = {
+        id: (strapiUser?.id ?? Date.now()).toString(),
+        name: strapiUser?.nama ?? strapiUser?.username ?? identifier,
+        username: strapiUser?.username,
+        email: strapiUser?.email,
+        jwt,
+      };
+      setUser(userData);
+      localStorage.setItem('folearn_user', JSON.stringify(userData));
+      if (jwt) localStorage.setItem('folearn_jwt', jwt);
+      return true;
+    } catch (err) {
+      console.error('Login gagal:', err);
+      return false;
     }
   };
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; message: string }> => {
+  const signup = async (username: string, email: string, password: string, name?: string): Promise<boolean> => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email) || password.length < 6 || !username.trim()) {
+      return false;
+    }
     try {
-      const response = await axios.post<AuthResponse>('/auth/local', {
-        identifier: email,
-        password
-      });
+      // Register hanya kirim field valid: username, email, password
+      const response = await registerUser({ username, email, password });
+      let { user: strapiUser, jwt } = response;
 
-      saveAuthData(response.data);
-      return { success: true, message: 'Login berhasil!' };
-
-    } catch (error) {
-      const axiosError = error as AxiosError<AuthError>;
-
-      if (axiosError.response?.status === 400) {
-        return { success: false, message: 'Email atau password salah' };
+      // Jika nama diisi, lakukan update nama pada user yang baru dibuat
+      if (name && jwt && strapiUser?.id) {
+        try {
+          const updatedUser = await updateUserNama(strapiUser.id, jwt, name);
+          // Strapi v4 mengembalikan objek user yang sudah di-update
+          strapiUser = updatedUser;
+        } catch (e) {
+          console.warn('Gagal mengupdate nama user di Strapi:', e);
+        }
       }
-
-      if (axiosError.response?.status === 401) {
-        return { success: false, message: 'Email atau password salah' };
-      }
-
-      const message = axiosError.response?.data?.message || 'Login gagal. Silakan coba lagi.';
-      return { success: false, message };
+      const userData: User = {
+        id: (strapiUser?.id ?? Date.now()).toString(),
+        name: strapiUser?.nama ?? name ?? strapiUser?.username ?? username,
+        username: strapiUser?.username ?? username,
+        email: strapiUser?.email ?? email,
+        jwt,
+      };
+      setUser(userData);
+      localStorage.setItem('folearn_user', JSON.stringify(userData));
+      if (jwt) localStorage.setItem('folearn_jwt', jwt);
+      return true;
+    } catch (err) {
+      console.error('Signup gagal:', err);
+      return false;
     }
   };
 
   const logout = () => {
-    clearAuthData();
+    setUser(null);
+    localStorage.removeItem('folearn_user');
+    localStorage.removeItem('folearn_jwt');
   };
 
   const refreshToken = async (): Promise<boolean> => {

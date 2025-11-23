@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 const Signup = () => {
+  const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,15 +24,21 @@ const Signup = () => {
   // Get the intended destination from location state
   const from = location.state?.from || '/';
 
-  // Redirect if already authenticated
-  if (isAuthenticated) {
-    navigate(from, { replace: true });
-    return null;
-  }
+  // Redirect jika sudah login (hindari navigate saat render)
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, from, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!username.trim()) {
+      setError('Username wajib diisi');
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError('Password dan konfirmasi password tidak cocok');
@@ -59,8 +66,8 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const result = await register(username, email, password);
-      if (result.success) {
+      const success = await signup(username.trim(), email, password, name.trim());
+      if (success) {
         navigate(from, { replace: true });
       } else {
         setError(result.message);
@@ -107,6 +114,24 @@ const Signup = () => {
                   placeholder="Masukkan username (minimal 3 karakter)"
                   required
                 />
+              </div>
+
+              {/* Username Field */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Username
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Masukkan username"
+                    required
+                  />
+                </div>
               </div>
 
               {/* Email Field */}

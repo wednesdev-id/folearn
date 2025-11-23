@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X, User, Mail, Lock, Edit2, Check, Eye, EyeOff, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import axios from "axios";
+import { updateUserProfile, changePassword } from "@/services/strapi";
 
 interface ProfileSettingsProps {
   isOpen: boolean;
@@ -9,8 +9,9 @@ interface ProfileSettingsProps {
 }
 
 const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const [isEditingName, setIsEditingName] = useState(false);
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [isEditingEmailWithPassword, setIsEditingEmailWithPassword] = useState(false);
@@ -19,19 +20,39 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Form states
-  const [userName, setUserName] = useState(user?.username || "");
+  const [userName, setUserName] = useState(user?.name || "");
+  const [userUsername, setUserUsername] = useState(user?.username || "");
   const [userEmail, setUserEmail] = useState(user?.email || "");
   const [tempName, setTempName] = useState(userName);
+  const [tempUsername, setTempUsername] = useState(userUsername);
   const [tempEmail, setTempEmail] = useState(userEmail);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  // Sinkronkan ketika user context berubah
+  useEffect(() => {
+    setUserName(user?.name || "");
+    setUserUsername(user?.username || "");
+    setUserEmail(user?.email || "");
+    setTempName(user?.name || "");
+    setTempUsername(user?.username || "");
+    setTempEmail(user?.email || "");
+  }, [user]);
+
   if (!isOpen) return null;
 
-  const handleSaveName = () => {
-    setUserName(tempName);
-    setIsEditingName(false);
+  const handleSaveName = async () => {
+    if (!user?.id || !user?.jwt) return alert("Sesi tidak valid");
+    try {
+      const updated = await updateUserProfile(user.id, user.jwt, { nama: tempName.trim() });
+      const newName = updated?.nama || tempName.trim();
+      setUserName(newName);
+      updateUser({ name: newName });
+      setIsEditingName(false);
+    } catch (e: any) {
+      alert(e?.message || "Gagal menyimpan nama");
+    }
   };
 
   const handleCancelName = () => {
@@ -39,12 +60,39 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
     setIsEditingName(false);
   };
 
-  const handleSaveEmail = () => {
+  const handleSaveUsername = async () => {
+    if (!user?.id || !user?.jwt) return alert("Sesi tidak valid");
+    try {
+      const updated = await updateUserProfile(user.id, user.jwt, { username: tempUsername.trim() });
+      const newUsername = updated?.username || tempUsername.trim();
+      setUserUsername(newUsername);
+      updateUser({ username: newUsername });
+      setIsEditingUsername(false);
+    } catch (e: any) {
+      alert(e?.message || "Gagal menyimpan username");
+    }
+  };
+
+  const handleCancelUsername = () => {
+    setTempUsername(userUsername);
+    setIsEditingUsername(false);
+  };
+
+  const handleSaveEmail = async () => {
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (emailRegex.test(tempEmail)) {
-      setUserEmail(tempEmail);
-      setIsEditingEmail(false);
+      if (!user?.id || !user?.jwt) return alert("Sesi tidak valid");
+      try {
+        const updated = await updateUserProfile(user.id, user.jwt, { email: tempEmail.trim() });
+        const newEmail = updated?.email || tempEmail.trim();
+        setUserEmail(newEmail);
+        updateUser({ email: newEmail });
+        setIsEditingEmail(false);
+        setIsEditingEmailWithPassword(false);
+      } catch (e: any) {
+        alert(e?.message || "Gagal menyimpan email");
+      }
     } else {
       alert("Format email tidak valid");
     }
@@ -55,16 +103,25 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
     setIsEditingEmail(false);
   };
 
-  const handleSavePassword = () => {
-    if (newPassword === confirmPassword && newPassword.length >= 6) {
-      // TODO: Implement password update logic
-      console.log("Password updated");
+  const handleSavePassword = async () => {
+    if (newPassword !== confirmPassword || newPassword.length < 6) {
+      alert("Password tidak cocok atau minimal 6 karakter");
+      return;
+    }
+    if (!user?.jwt) return alert("Sesi tidak valid");
+    try {
+      await changePassword(user.jwt, {
+        currentPassword,
+        password: newPassword,
+        passwordConfirmation: confirmPassword,
+      });
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
       setIsEditingPassword(false);
-    } else {
-      alert("Password tidak cocok atau minimal 6 karakter");
+      alert("Password berhasil diubah");
+    } catch (e: any) {
+      alert(e?.message || "Gagal mengganti password");
     }
   };
 
@@ -75,9 +132,10 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
     setIsEditingPassword(false);
   };
 
-  const hasChanges = isEditingName || isEditingEmail || isEditingPassword;
+  const hasChanges = isEditingName || isEditingUsername || isEditingEmail || isEditingPassword;
   const handleSaveAll = () => {
     if (isEditingName) handleSaveName();
+    if (isEditingUsername) handleSaveUsername();
     if (isEditingEmail) handleSaveEmail();
     if (isEditingPassword) handleSavePassword();
   };
@@ -152,6 +210,57 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
             ) : (
               <button
                 onClick={() => setIsEditingName(true)}
+                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+              >
+                <Edit2 className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Username Field */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Username
+          </label>
+          <div className="flex items-center gap-2">
+            <div className="flex-1 relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              {isEditingUsername ? (
+                <input
+                  type="text"
+                  value={tempUsername}
+                  onChange={(e) => setTempUsername(e.target.value)}
+                  className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Masukkan username"
+                />
+              ) : (
+                <input
+                  type="text"
+                  value={userUsername}
+                  readOnly
+                  className="w-full pl-10 pr-10 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700"
+                />
+              )}
+            </div>
+            {isEditingUsername ? (
+              <div className="flex gap-1">
+                <button
+                  onClick={handleSaveUsername}
+                  className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                >
+                  <Check className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={handleCancelUsername}
+                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsEditingUsername(true)}
                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
               >
                 <Edit2 className="w-4 h-4" />
@@ -254,8 +363,9 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
               {!isEditingPassword ? (
                 <input
                   type="password"
-                  value="********"
+                  value=""
                   readOnly
+                  placeholder="password"
                   className="w-full pl-10 pr-10 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700"
                 />
               ) : (

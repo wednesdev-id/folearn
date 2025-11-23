@@ -12,6 +12,8 @@ import Kelas8 from "./pages/Kelas8";
 import Kelas9 from "./pages/Kelas9";
 import SubjectDetail from "./pages/SubjectDetail";
 import ChapterDetail from "./pages/ChapterDetail";
+import MaterialDetail from "./pages/MaterialDetail";
+import SubMaterialDetail from "./pages/SubMaterialDetail";
 import LessonContent from "./pages/LessonContent";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
@@ -30,27 +32,19 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
 
-            {/* Protected Class Routes */}
-            <Route path="/kelas-7" element={
-              <ProtectedRoute>
-                <Kelas7 />
-              </ProtectedRoute>
-            } />
-            <Route path="/kelas-8" element={
-              <ProtectedRoute>
-                <Kelas8 />
-              </ProtectedRoute>
-            } />
-            <Route path="/kelas-9" element={
-              <ProtectedRoute>
-                <Kelas9 />
-              </ProtectedRoute>
-            } />
+            {/* Kelas Routes - accessible for guests */}
+            <Route path="/kelas-7" element={<Kelas7 />} />
+            <Route path="/kelas-8" element={<Kelas8 />} />
+            <Route path="/kelas-9" element={<Kelas9 />} />
 
             {/* Subject, Chapter, and Lesson Routes */}
-            <Route path="/subject/:subjectId" element={
+            {/* Subject and Material - accessible for guests */}
+            <Route path="/subject/:subjectId" element={<SubjectDetail />} />
+            {/* Material route using subject and material slugs */}
+            <Route path="/subject/:subjectSlug/:materialSlug" element={<MaterialDetail />} />
+            <Route path="/subject/:subjectSlug/:materialSlug/sub/:subId" element={
               <ProtectedRoute>
-                <SubjectDetail />
+                <SubMaterialDetail />
               </ProtectedRoute>
             } />
             <Route path="/subject/:subjectId/chapter/:chapterId" element={

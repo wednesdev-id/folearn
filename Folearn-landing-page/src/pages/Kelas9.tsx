@@ -3,13 +3,24 @@ import { ArrowLeft, BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
 import SubjectCard from "@/components/SubjectCard";
-import { getSubjectsByGrade } from "@/data/subjects";
-import { useScrollToTop } from "@/hooks/useScrollToTop";
+import { useQuery } from "@tanstack/react-query";
+import { fetchSubjectsSmartByGrade, toSubjectCardProps } from "@/services/strapi";
 
 const Kelas9 = () => {
-  // Scroll to top setiap kali masuk halaman kelas
-  useScrollToTop(['kelas-9']);
-  const kelas9Subjects = getSubjectsByGrade(9);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['subjects', 'kelas-9'],
+    queryFn: async () => {
+      const res = await fetchSubjectsSmartByGrade('kelas-9');
+      return res.data.map(toSubjectCardProps);
+    },
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60,
+  });
+
+  const subjects = data || [];
 
   return (
     <div className="min-h-screen bg-gradient-hero">
@@ -37,25 +48,26 @@ const Kelas9 = () => {
             </div>
           </div>
 
-          {/* Mata Pelajaran */}
+          {/* Daftar Mata Pelajaran (tanpa pembagian) */}
           <section>
-            <div className="flex items-center gap-2 mb-6">
-              <BookOpen className="w-5 h-5 text-primary" />
-              <h2 className="text-2xl font-semibold text-gray-800">Mata Pelajaran Kelas 9</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {kelas9Subjects.map((subject, index) => (
-                <div key={subject.id} style={{ animationDelay: `${index * 100}ms` }} className="fade-in">
-                  <SubjectCard
-                    title={subject.title}
-                    description={subject.description}
-                    icon={subject.icon}
-                    color={subject.color}
-                    subjectId={subject.id}
-                  />
-                </div>
-              ))}
-            </div>
+            {isLoading && (<p className="text-muted-foreground">Memuat data mata pelajaran...</p>)}
+            {isError && (<p className="text-red-600">Gagal memuat data: {(error as Error)?.message}</p>)}
+            {!isLoading && !isError && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {subjects.map((subject, index) => (
+                  <div key={subject.id} style={{ animationDelay: `${index * 100}ms` }} className="fade-in">
+                    <SubjectCard
+                      title={subject.title}
+                      description={subject.description}
+                      icon={subject.icon}
+                      color={subject.color}
+                      isOptional={subject.isOptional}
+                      subjectId={String((subject as any).slug ?? subject.id)}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
         </div>
       </main>
