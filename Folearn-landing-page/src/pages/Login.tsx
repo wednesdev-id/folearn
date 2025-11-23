@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { User, Mail, Lock, ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header';
 import NeomorphCard from '@/components/NeomorphCard';
 import { useAuth } from '@/contexts/AuthContext';
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -12,12 +13,10 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, checkUserExistsInDb } = useAuth();
 
-  // Scroll to top on component mount
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  // Scroll to top setiap kali masuk halaman login
+  useScrollToTop(['login']);
 
   // Get the intended destination from location state
   const from = location.state?.from || '/';
@@ -35,11 +34,17 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const success = await login(email, password);
-      if (success) {
-        navigate(from, { replace: true });
+      const result = await login(email, password);
+      if (result.success) {
+        // After successful login, verify the user record exists in backend
+        const check = await checkUserExistsInDb({ id: (JSON.parse(localStorage.getItem('folearn_user') || '{}') as any)?.id });
+        if (check.exists) {
+          navigate(from, { replace: true });
+        } else {
+          setError('Login sukses tetapi data pengguna tidak ditemukan di database. Silakan hubungi admin.');
+        }
       } else {
-        setError('Email atau password salah');
+        setError(result.message);
       }
     } catch (error) {
       setError('Terjadi kesalahan, silakan coba lagi');

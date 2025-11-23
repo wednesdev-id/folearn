@@ -1,5 +1,4 @@
 import { Link, useParams } from "react-router-dom";
-import { useEffect } from "react";
 import { ArrowLeft, BookOpen, Target, Award } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
@@ -7,9 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchSubjectById, toSubjectDetail } from "@/services/strapi";
 
 const SubjectDetail = () => {
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
   const { subjectId } = useParams<{ subjectId: string }>();
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['subject', subjectId],
@@ -119,11 +115,6 @@ const SubjectDetail = () => {
                   <span className={`px-3 py-1 bg-white rounded-full text-sm font-medium ${subject.color}`}>
                     Kelas {subject.grade}
                   </span>
-                  {subject.isOptional && (
-                    <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium">
-                      Mata Pelajaran Pilihan
-                    </span>
-                  )}
                   <span className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm font-medium">
                     {subject.chapters.length} Bab
                   </span>

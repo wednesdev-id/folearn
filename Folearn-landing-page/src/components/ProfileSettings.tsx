@@ -167,10 +167,10 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
           </div>
         </div>
 
-        {/* Name Field */}
+        {/* Username Field */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Nama
+            Username
           </label>
           <div className="flex items-center gap-2">
             <div className="flex-1 relative">

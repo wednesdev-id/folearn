@@ -8,9 +8,7 @@ export interface SubjectDetail {
   longDescription: string;
   icon: string;
   color: string;
-  isOptional?: boolean;
   grade: 7 | 8 | 9;
-  category: 'wajib' | 'pilihan';
   chapters: Chapter[];
   learningObjectives: string[];
   skills: string[];
@@ -63,7 +61,6 @@ export const kelas7Subjects: SubjectDetail[] = [
     icon: 'heart',
     color: 'text-red-500',
     grade: 7,
-    category: 'wajib',
     learningObjectives: [
       'Memahami konsep ketuhanan sesuai agama masing-masing',
       'Mengamalkan nilai-nilai keagamaan dalam kehidupan sehari-hari',
@@ -124,7 +121,6 @@ export const kelas7Subjects: SubjectDetail[] = [
     icon: 'brain',
     color: 'text-blue-500',
     grade: 7,
-    category: 'wajib',
     learningObjectives: [
       'Memahami sila-sila Pancasila',
       'Mengidentifikasi penerapan Pancasila dalam kehidupan',
@@ -161,7 +157,6 @@ export const kelas7Subjects: SubjectDetail[] = [
     icon: 'book',
     color: 'text-green-500',
     grade: 7,
-    category: 'wajib',
     learningObjectives: [
       'Menggunakan bahasa Indonesia dalam berkomunikasi',
       'Memahami berbagai teks tulis',
@@ -198,7 +193,6 @@ export const kelas7Subjects: SubjectDetail[] = [
     icon: 'calculator',
     color: 'text-purple-500',
     grade: 7,
-    category: 'wajib',
     learningObjectives: [
       'Memahami operasi hitung bilangan',
       'Menyelesaikan masalah aritmetika',
@@ -235,7 +229,6 @@ export const kelas7Subjects: SubjectDetail[] = [
     icon: 'microscope',
     color: 'text-teal-500',
     grade: 7,
-    category: 'wajib',
     learningObjectives: [
       'Memahami metode ilmiah',
       'Mengidentifikasi karakteristik makhluk hidup',
@@ -272,7 +265,6 @@ export const kelas7Subjects: SubjectDetail[] = [
     icon: 'globe',
     color: 'text-orange-500',
     grade: 7,
-    category: 'wajib',
     learningObjectives: [
       'Memahami konsep ruang dan interaksi sosial',
       'Mengenal sejarah Indonesia kuno',
@@ -309,7 +301,6 @@ export const kelas7Subjects: SubjectDetail[] = [
     icon: 'languages',
     color: 'text-indigo-500',
     grade: 7,
-    category: 'wajib',
     learningObjectives: [
       'Menggunakan ungkapan sapaan dasar',
       'Memahami teks fungsional pendek',
@@ -346,7 +337,6 @@ export const kelas7Subjects: SubjectDetail[] = [
     icon: 'monitor',
     color: 'text-cyan-500',
     grade: 7,
-    category: 'wajib',
     learningObjectives: [
       'Memahami komponen komputer',
       'Menggunakan software dasar',
@@ -383,7 +373,6 @@ export const kelas7Subjects: SubjectDetail[] = [
     icon: 'dumbbell',
     color: 'text-emerald-500',
     grade: 7,
-    category: 'wajib',
     learningObjectives: [
       'Mengembangkan kebugaran fisik',
       'Menguasai gerak dasar olahraga',
@@ -420,8 +409,6 @@ export const kelas7Subjects: SubjectDetail[] = [
     icon: 'palette',
     color: 'text-pink-500',
     grade: 7,
-    category: 'pilihan',
-    isOptional: true,
     learningObjectives: [
       'Mengapresiasi karya seni',
       'Menciptakan karya seni sederhana',
@@ -458,8 +445,6 @@ export const kelas7Subjects: SubjectDetail[] = [
     icon: 'users',
     color: 'text-yellow-600',
     grade: 7,
-    category: 'pilihan',
-    isOptional: true,
     learningObjectives: [
       'Memahami budaya lokal',
       'Mengenal bahasa daerah',
@@ -500,7 +485,6 @@ export const kelas8Subjects: SubjectDetail[] = [
     icon: 'heart',
     color: 'text-red-500',
     grade: 8,
-    category: 'wajib',
     learningObjectives: [
       'Memperdalam pemahaman ajaran agama',
       'Menganalisis nilai-nilai keagamaan',
@@ -537,7 +521,6 @@ export const kelas8Subjects: SubjectDetail[] = [
     icon: 'brain',
     color: 'text-blue-500',
     grade: 8,
-    category: 'wajib',
     learningObjectives: [
       'Menganalisis implementasi Pancasila',
       'Mengkaji demokrasi Pancasila',
@@ -574,7 +557,6 @@ export const kelas8Subjects: SubjectDetail[] = [
     icon: 'book',
     color: 'text-green-500',
     grade: 8,
-    category: 'wajib',
     learningObjectives: [
       'Menganalisis teks eksposisi',
       'Membuat teks persuasif',
@@ -611,7 +593,6 @@ export const kelas8Subjects: SubjectDetail[] = [
     icon: 'calculator',
     color: 'text-purple-500',
     grade: 8,
-    category: 'wajib',
     learningObjectives: [
       'Menguasai operasi aljabar',
       'Memahami sistem persamaan',
@@ -648,7 +629,6 @@ export const kelas8Subjects: SubjectDetail[] = [
     icon: 'microscope',
     color: 'text-teal-500',
     grade: 8,
-    category: 'wajib',
     learningObjectives: [
       'Memahami sistem gerak manusia',
       'Menganalisis gaya dan tekanan',
@@ -685,7 +665,6 @@ export const kelas8Subjects: SubjectDetail[] = [
     icon: 'globe',
     color: 'text-orange-500',
     grade: 8,
-    category: 'wajib',
     learningObjectives: [
       'Memahami konsep ekonomi sederhana',
       'Menganalisis struktur pemerintahan',
@@ -722,7 +701,6 @@ export const kelas8Subjects: SubjectDetail[] = [
     icon: 'languages',
     color: 'text-indigo-500',
     grade: 8,
-    category: 'wajib',
     learningObjectives: [
       'Meningkatkan kemampuan listening',
       'Menguasai tata bahasa lanjutan',
@@ -759,7 +737,6 @@ export const kelas8Subjects: SubjectDetail[] = [
     icon: 'monitor',
     color: 'text-cyan-500',
     grade: 8,
-    category: 'wajib',
     learningObjectives: [
       'Memahami algoritma pemrograman',
       'Membuat program sederhana',
@@ -796,7 +773,6 @@ export const kelas8Subjects: SubjectDetail[] = [
     icon: 'dumbbell',
     color: 'text-emerald-500',
     grade: 8,
-    category: 'wajib',
     learningObjectives: [
       'Menguasai teknik olahraga lanjutan',
       'Memahami kesehatan reproduksi',
@@ -833,8 +809,6 @@ export const kelas8Subjects: SubjectDetail[] = [
     icon: 'palette',
     color: 'text-pink-500',
     grade: 8,
-    category: 'pilihan',
-    isOptional: true,
     learningObjectives: [
       'Mengembangkan teknik seni lanjutan',
       'Menciptakan karya seni kompleks',
@@ -871,8 +845,6 @@ export const kelas8Subjects: SubjectDetail[] = [
     icon: 'users',
     color: 'text-yellow-600',
     grade: 8,
-    category: 'pilihan',
-    isOptional: true,
     learningObjectives: [
       'Memahami potensi lokal',
       'Mengembangkan produk kreatif',
@@ -913,7 +885,6 @@ export const kelas9Subjects: SubjectDetail[] = [
     icon: 'heart',
     color: 'text-red-500',
     grade: 9,
-    category: 'wajib',
     learningObjectives: [
       'Menguasai implementasi ajaran agama',
       'Menganalisis isu kontemporer',
@@ -950,7 +921,6 @@ export const kelas9Subjects: SubjectDetail[] = [
     icon: 'brain',
     color: 'text-blue-500',
     grade: 9,
-    category: 'wajib',
     learningObjectives: [
       'Mengimplementasikan nilai-nilai Pancasila',
       'Menganalisis isu global dan nasional',
@@ -987,7 +957,6 @@ export const kelas9Subjects: SubjectDetail[] = [
     icon: 'book',
     color: 'text-green-500',
     grade: 9,
-    category: 'wajib',
     learningObjectives: [
       'Menganalisis teks editorial',
       'Menguasai teknik debat',
@@ -1024,7 +993,6 @@ export const kelas9Subjects: SubjectDetail[] = [
     icon: 'calculator',
     color: 'text-purple-500',
     grade: 9,
-    category: 'wajib',
     learningObjectives: [
       'Menguasai persamaan kuadrat',
       'Memahami trigonometri dasar',
@@ -1061,7 +1029,6 @@ export const kelas9Subjects: SubjectDetail[] = [
     icon: 'microscope',
     color: 'text-teal-500',
     grade: 9,
-    category: 'wajib',
     learningObjectives: [
       'Memahami reproduksi manusia',
       'Menganalisis pewarisan sifat',
@@ -1098,7 +1065,6 @@ export const kelas9Subjects: SubjectDetail[] = [
     icon: 'globe',
     color: 'text-orange-500',
     grade: 9,
-    category: 'wajib',
     learningObjectives: [
       'Menganalisis isu global',
       'Memahami ekonomi makro',
@@ -1135,7 +1101,6 @@ export const kelas9Subjects: SubjectDetail[] = [
     icon: 'languages',
     color: 'text-indigo-500',
     grade: 9,
-    category: 'wajib',
     learningObjectives: [
       'Mencapai kemampuan berbicara lancar',
       'Mengapresiasi sastra Inggris',
@@ -1172,7 +1137,6 @@ export const kelas9Subjects: SubjectDetail[] = [
     icon: 'monitor',
     color: 'text-cyan-500',
     grade: 9,
-    category: 'wajib',
     learningObjectives: [
       'Menguasai pengembangan web',
       'Memahami database system',
@@ -1209,7 +1173,6 @@ export const kelas9Subjects: SubjectDetail[] = [
     icon: 'dumbbell',
     color: 'text-emerald-500',
     grade: 9,
-    category: 'wajib',
     learningObjectives: [
       'Membentuk gaya hidup sehat',
       'Menguasai olahraga kompetitif',
@@ -1246,8 +1209,6 @@ export const kelas9Subjects: SubjectDetail[] = [
     icon: 'palette',
     color: 'text-pink-500',
     grade: 9,
-    category: 'pilihan',
-    isOptional: true,
     learningObjectives: [
       'Menciptakan karya seni inovatif',
       'Mengembangkan entrepreneurship kreatif',
@@ -1284,8 +1245,6 @@ export const kelas9Subjects: SubjectDetail[] = [
     icon: 'users',
     color: 'text-yellow-600',
     grade: 9,
-    category: 'pilihan',
-    isOptional: true,
     learningObjectives: [
       'Mengembangkan potensi daerah',
       'Melestarikan warisan budaya',
@@ -1335,7 +1294,3 @@ export const getSubjectById = (id: string): SubjectDetail | undefined => {
   return allSubjects.find(subject => subject.id === id);
 };
 
-export const getSubjectsByCategory = (grade: 7 | 8 | 9, category: 'wajib' | 'pilihan'): SubjectDetail[] => {
-  const subjects = getSubjectsByGrade(grade);
-  return subjects.filter(subject => subject.category === category);
-};

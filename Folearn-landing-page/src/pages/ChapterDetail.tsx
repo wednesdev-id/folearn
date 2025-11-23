@@ -1,5 +1,4 @@
 import { Link, useParams } from "react-router-dom";
-import { useEffect } from "react";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import NeomorphCard from "@/components/NeomorphCard";
@@ -7,9 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchSubjectById, toSubjectDetail } from "@/services/strapi";
 
 const ChapterDetail = () => {
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
   const { subjectId, chapterId } = useParams<{ subjectId: string; chapterId: string }>();
 
   const { data, isLoading, isError, error } = useQuery({

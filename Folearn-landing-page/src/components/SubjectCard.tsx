@@ -6,11 +6,10 @@ interface SubjectCardProps {
   description: string;
   icon: string;
   color: string;
-  isOptional?: boolean;
   subjectId?: string;
 }
 
-const SubjectCard = ({ title, description, icon, color, isOptional = false, subjectId }: SubjectCardProps) => {
+const SubjectCard = ({ title, description, icon, color, subjectId }: SubjectCardProps) => {
   const getIcon = (iconName: string) => {
     const iconClass = `w-8 h-8 ${color}`;
     switch (iconName) {
@@ -37,16 +36,9 @@ const SubjectCard = ({ title, description, icon, color, isOptional = false, subj
             {getIcon(icon)}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-semibold text-gray-800 group-hover:text-blue-500 transition-colors duration-200 text-sm truncate">
-                {title}
-              </h3>
-              {isOptional && (
-                <span className="px-1.5 py-0.5 bg-blue-100 text-blue-600 text-xs rounded-full font-medium flex-shrink-0">
-                  Pilihan
-                </span>
-              )}
-            </div>
+            <h3 className="font-semibold text-gray-800 group-hover:text-blue-500 transition-colors duration-200 text-sm truncate mb-1">
+              {title}
+            </h3>
             <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">
               {description}
             </p>
