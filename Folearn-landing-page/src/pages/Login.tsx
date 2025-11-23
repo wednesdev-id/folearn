@@ -13,7 +13,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, isAuthenticated, checkUserExistsInDb } = useAuth();
+  const { login, isAuthenticated } = useAuth();
 
   // Scroll to top setiap kali masuk halaman login
   useScrollToTop(['login']);
@@ -36,18 +36,16 @@ const Login = () => {
     try {
       const result = await login(email, password);
       if (result.success) {
-        // After successful login, verify the user record exists in backend
-        const check = await checkUserExistsInDb({ id: (JSON.parse(localStorage.getItem('folearn_user') || '{}') as any)?.id });
-        if (check.exists) {
-          navigate(from, { replace: true });
-        } else {
-          setError('Login sukses tetapi data pengguna tidak ditemukan di database. Silakan hubungi admin.');
-        }
+        // Login berhasil, redirect ke halaman tujuan
+        navigate(from, { replace: true });
       } else {
-        setError(result.message);
+        // Tampilkan pesan error dari server
+        setError(result.message || 'Login gagal. Silakan cek email/username dan password Anda.');
       }
     } catch (error) {
-      setError('Terjadi kesalahan, silakan coba lagi');
+      // Fallback error handling
+      const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan, silakan coba lagi';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

@@ -64,7 +64,7 @@ interface AuthError {
 
 interface AuthContextType {
   user: User | null;
-  login: (emailOrUsername: string, password: string) => Promise<boolean>;
+  login: (emailOrUsername: string, password: string) => Promise<{ success: boolean; message?: string }>;
   signup: (username: string, email: string, password: string, name?: string) => Promise<boolean>;
   logout: () => void;
   refreshToken: () => Promise<boolean>;
@@ -146,12 +146,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     initializeAuth();
   }, []);
 
-  const login = async (emailOrUsername: string, password: string): Promise<boolean> => {
+  const login = async (emailOrUsername: string, password: string): Promise<{ success: boolean; message?: string }> => {
     const identifier = emailOrUsername.trim();
-    if (!identifier || !password) return false;
+    if (!identifier || !password) {
+      return { success: false, message: 'Email/username dan password harus diisi' };
+    }
     try {
       const response = await loginUser({ identifier, password });
       const { user: strapiUser, jwt } = response;
+      
+      // Validasi response
+      if (!strapiUser || !jwt) {
+        return { success: false, message: 'Login gagal: Response tidak valid dari server' };
+      }
+      
       const userData: User = {
         id: (strapiUser?.id ?? Date.now()).toString(),
         name: strapiUser?.nama ?? strapiUser?.username ?? identifier,
@@ -162,10 +170,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(userData);
       localStorage.setItem('folearn_user', JSON.stringify(userData));
       if (jwt) localStorage.setItem('folearn_jwt', jwt);
-      return true;
+      return { success: true };
     } catch (err) {
       console.error('Login gagal:', err);
-      return false;
+      // Extract error message dari Error object
+      const errorMessage = err instanceof Error ? err.message : 'Terjadi kesalahan saat login. Silakan coba lagi.';
+      return { success: false, message: errorMessage };
     }
   };
 

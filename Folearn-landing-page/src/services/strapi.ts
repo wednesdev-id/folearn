@@ -501,8 +501,24 @@ export async function loginUser(payload: { identifier: string; password: string 
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
-    const errText = await res.text().catch(() => '');
-    throw new Error(`Login gagal: ${res.status} ${errText}`);
+    // Parse error response dari Strapi
+    let errorMessage = 'Login gagal';
+    try {
+      const errorData = await res.json();
+      // Strapi mengembalikan error dalam format: { data: null, error: { message: "...", ... } }
+      if (errorData?.error?.message) {
+        errorMessage = errorData.error.message;
+      } else if (typeof errorData === 'string') {
+        errorMessage = errorData;
+      } else {
+        errorMessage = `Login gagal: ${res.status} ${res.statusText}`;
+      }
+    } catch {
+      // Jika response bukan JSON, gunakan status text
+      const errText = await res.text().catch(() => '');
+      errorMessage = errText || `Login gagal: ${res.status} ${res.statusText}`;
+    }
+    throw new Error(errorMessage);
   }
   return res.json();
 }
