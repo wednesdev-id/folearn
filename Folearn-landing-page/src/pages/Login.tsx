@@ -123,13 +123,6 @@ const Login = () => {
               </button>
             </form>
 
-            {/* Demo Account Info */}
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-800 font-medium mb-2">Akun Demo:</p>
-              <p className="text-sm text-blue-700">Email: user@example.com</p>
-              <p className="text-sm text-blue-700">Password: password123</p>
-            </div>
-
             {/* Signup Link */}
             <div className="text-center mt-6">
               <p className="text-gray-600">

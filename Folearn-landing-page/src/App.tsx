@@ -32,35 +32,16 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
 
-            {/* Protected Routes */}
-            <Route path="/kelas-7" element={
-              <ProtectedRoute>
-                <Kelas7 />
-              </ProtectedRoute>
-            } />
-            <Route path="/kelas-8" element={
-              <ProtectedRoute>
-                <Kelas8 />
-              </ProtectedRoute>
-            } />
-            <Route path="/kelas-9" element={
-              <ProtectedRoute>
-                <Kelas9 />
-              </ProtectedRoute>
-            } />
+            {/* Kelas Routes - accessible for guests */}
+            <Route path="/kelas-7" element={<Kelas7 />} />
+            <Route path="/kelas-8" element={<Kelas8 />} />
+            <Route path="/kelas-9" element={<Kelas9 />} />
 
             {/* Subject, Chapter, and Lesson Routes */}
-            <Route path="/subject/:subjectId" element={
-              <ProtectedRoute>
-                <SubjectDetail />
-              </ProtectedRoute>
-            } />
-            {/* New Material route using subject and material slugs */}
-            <Route path="/subject/:subjectSlug/:materialSlug" element={
-              <ProtectedRoute>
-                <MaterialDetail />
-              </ProtectedRoute>
-            } />
+            {/* Subject and Material - accessible for guests */}
+            <Route path="/subject/:subjectId" element={<SubjectDetail />} />
+            {/* Material route using subject and material slugs */}
+            <Route path="/subject/:subjectSlug/:materialSlug" element={<MaterialDetail />} />
             <Route path="/subject/:subjectSlug/:materialSlug/sub/:subId" element={
               <ProtectedRoute>
                 <SubMaterialDetail />
