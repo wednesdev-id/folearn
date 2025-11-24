@@ -160,17 +160,42 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (!strapiUser || !jwt) {
         return { success: false, message: 'Login gagal: Response tidak valid dari server' };
       }
-      
+
+      // Persist token dan set Authorization header untuk request berikutnya
+      try {
+        localStorage.setItem('folearn_jwt', jwt);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+      } catch {}
+
+      // Upayakan ambil data lengkap user (termasuk role) dari /users/me
+      let fullUserData: any = null;
+      try {
+        const meRes = await axios.get('/users/me', {
+          headers: { Authorization: `Bearer ${jwt}` }
+        });
+        fullUserData = meRes.data?.data || meRes.data;
+      } catch (e) {
+        console.warn('Gagal mengambil /users/me setelah login, gunakan data login sebagai fallback:', e);
+      }
+
+      const role = fullUserData?.role || strapiUser?.role || { id: 0, name: 'Authenticated', description: '' };
+
       const userData: User = {
-        id: (strapiUser?.id ?? Date.now()).toString(),
-        name: strapiUser?.nama ?? strapiUser?.username ?? identifier,
-        username: strapiUser?.username,
-        email: strapiUser?.email,
+        id: (fullUserData?.id ?? strapiUser?.id ?? Date.now()).toString(),
+        name: fullUserData?.nama ?? strapiUser?.nama ?? strapiUser?.username ?? identifier,
+        username: fullUserData?.username ?? strapiUser?.username ?? identifier,
+        email: fullUserData?.email ?? strapiUser?.email,
         jwt,
+        confirmed: !!(fullUserData?.confirmed ?? strapiUser?.confirmed),
+        blocked: !!(fullUserData?.blocked ?? strapiUser?.blocked),
+        role,
       };
+
       setUser(userData);
-      localStorage.setItem('folearn_user', JSON.stringify(userData));
-      if (jwt) localStorage.setItem('folearn_jwt', jwt);
+      try {
+        localStorage.setItem('folearn_user', JSON.stringify(userData));
+      } catch {}
+
       return { success: true };
     } catch (err) {
       console.error('Login gagal:', err);
@@ -200,16 +225,46 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           console.warn('Gagal mengupdate nama user di Strapi:', e);
         }
       }
+
+      // Persist token dan set Authorization header
+      if (jwt) {
+        try {
+          localStorage.setItem('folearn_jwt', jwt);
+          axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+        } catch {}
+      }
+
+      // Ambil data lengkap user dari /users/me untuk mendapatkan role
+      let fullUserData: any = null;
+      if (jwt) {
+        try {
+          const meRes = await axios.get('/users/me', {
+            headers: { Authorization: `Bearer ${jwt}` }
+          });
+          fullUserData = meRes.data?.data || meRes.data;
+        } catch (e) {
+          console.warn('Gagal mengambil /users/me setelah signup, gunakan data register sebagai fallback:', e);
+        }
+      }
+
+      const role = fullUserData?.role || strapiUser?.role || { id: 0, name: 'Authenticated', description: '' };
+
       const userData: User = {
-        id: (strapiUser?.id ?? Date.now()).toString(),
-        name: strapiUser?.nama ?? name ?? strapiUser?.username ?? username,
-        username: strapiUser?.username ?? username,
-        email: strapiUser?.email ?? email,
+        id: (fullUserData?.id ?? strapiUser?.id ?? Date.now()).toString(),
+        name: fullUserData?.nama ?? strapiUser?.nama ?? name ?? strapiUser?.username ?? username,
+        username: fullUserData?.username ?? strapiUser?.username ?? username,
+        email: fullUserData?.email ?? strapiUser?.email ?? email,
         jwt,
+        confirmed: !!(fullUserData?.confirmed ?? strapiUser?.confirmed),
+        blocked: !!(fullUserData?.blocked ?? strapiUser?.blocked),
+        role,
       };
+
       setUser(userData);
-      localStorage.setItem('folearn_user', JSON.stringify(userData));
-      if (jwt) localStorage.setItem('folearn_jwt', jwt);
+      try {
+        localStorage.setItem('folearn_user', JSON.stringify(userData));
+      } catch {}
+
       return { success: true };
     } catch (err) {
       console.error('Signup gagal:', err);
