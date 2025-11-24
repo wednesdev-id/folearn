@@ -16,7 +16,7 @@ const Signup = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { register, isAuthenticated } = useAuth();
+  const { signup, isAuthenticated } = useAuth();
 
   // Scroll to top setiap kali masuk halaman signup
   useScrollToTop(['signup']);
@@ -66,13 +66,14 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const success = await signup(username.trim(), email, password, name.trim());
-      if (success) {
+      const result = await signup(username.trim(), email, password, name.trim());
+      if (result.success) {
         navigate(from, { replace: true });
       } else {
-        setError(result.message);
+        setError(result.message || 'Registrasi gagal. Silakan coba lagi.');
       }
     } catch (error) {
+      console.error('Signup submit error:', error);
       setError('Terjadi kesalahan, silakan coba lagi');
     } finally {
       setIsLoading(false);
@@ -119,19 +120,16 @@ const Signup = () => {
               {/* Username Field */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Username
+                  Nama Lengkap
                 </label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Masukkan username"
-                    required
-                  />
-                </div>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Masukkan nama lengkap"
+                  required
+                />
               </div>
 
               {/* Email Field */}

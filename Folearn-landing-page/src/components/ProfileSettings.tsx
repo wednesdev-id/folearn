@@ -101,6 +101,7 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
   const handleCancelEmail = () => {
     setTempEmail(userEmail);
     setIsEditingEmail(false);
+    setIsEditingEmailWithPassword(false);
   };
 
   const handleSavePassword = async () => {
@@ -132,11 +133,11 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
     setIsEditingPassword(false);
   };
 
-  const hasChanges = isEditingName || isEditingUsername || isEditingEmail || isEditingPassword;
+  const hasChanges = isEditingName || isEditingUsername || isEditingEmailWithPassword || isEditingPassword;
   const handleSaveAll = () => {
     if (isEditingName) handleSaveName();
     if (isEditingUsername) handleSaveUsername();
-    if (isEditingEmail) handleSaveEmail();
+    if (isEditingEmailWithPassword) handleSaveEmail();
     if (isEditingPassword) handleSavePassword();
   };
 
@@ -170,7 +171,7 @@ const ProfileSettings = ({ isOpen, onClose }: ProfileSettingsProps) => {
         {/* Username Field */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Username
+            Nama Lengkap
           </label>
           <div className="flex items-center gap-2">
             <div className="flex-1 relative">

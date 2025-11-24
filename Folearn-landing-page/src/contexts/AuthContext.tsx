@@ -65,13 +65,14 @@ interface AuthError {
 interface AuthContextType {
   user: User | null;
   login: (emailOrUsername: string, password: string) => Promise<{ success: boolean; message?: string }>;
-  signup: (username: string, email: string, password: string, name?: string) => Promise<boolean>;
+  signup: (username: string, email: string, password: string, name?: string) => Promise<{ success: boolean; message?: string }>;
   logout: () => void;
   refreshToken: () => Promise<boolean>;
-  checkUserExistsInDb: (identifier: { email?: string; id?: number }) => Promise<{ exists: boolean; data?: any }>; 
+  checkUserExistsInDb: (identifier: { email?: string; id?: number }) => Promise<{ exists: boolean; data?: any }>;
   isAuthenticated: boolean;
   isLoading: boolean;
   isStudent: boolean;
+  updateUser: (partial: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -121,15 +122,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           if (userData?.id) {
             const user: User = {
               id: userData.id,
+              name: userData.nama || userData.username || '',
               username: userData.username || '',
               email: userData.email || '',
               confirmed: !!userData.confirmed,
               blocked: !!userData.blocked,
               role: userData.role || { id: 0, name: 'Authenticated', description: '' }
             };
-
             setUser(user);
-            // Set axios default header for future requests
+            localStorage.setItem('folearn_user', JSON.stringify(user));
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           } else {
             // Token invalid, clear storage
@@ -179,16 +180,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const signup = async (username: string, email: string, password: string, name?: string): Promise<boolean> => {
+  const signup = async (username: string, email: string, password: string, name?: string): Promise<{ success: boolean; message?: string }> => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email) || password.length < 6 || !username.trim()) {
-      return false;
+      return { success: false, message: 'Validasi input gagal. Periksa kembali email, username, dan panjang password.' };
     }
     try {
       // Register hanya kirim field valid: username, email, password
       const response = await registerUser({ username, email, password });
       let { user: strapiUser, jwt } = response;
-
+  
       // Jika nama diisi, lakukan update nama pada user yang baru dibuat
       if (name && jwt && strapiUser?.id) {
         try {
@@ -209,10 +210,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(userData);
       localStorage.setItem('folearn_user', JSON.stringify(userData));
       if (jwt) localStorage.setItem('folearn_jwt', jwt);
-      return true;
+      return { success: true };
     } catch (err) {
       console.error('Signup gagal:', err);
-      return false;
+      const errorMessage = err instanceof Error ? err.message : 'Terjadi kesalahan saat registrasi. Silakan coba lagi.';
+      return { success: false, message: errorMessage };
     }
   };
 
@@ -239,15 +241,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         
         const user: User = {
           id: userData.id,
+          name: userData.nama || userData.username || '',
           username: userData.username || '',
           email: userData.email || '',
           confirmed: !!userData.confirmed,
           blocked: !!userData.blocked,
-          role: {
-            id: role.id || 0,
-            name: role.name || 'Authenticated',
-            description: role.description || ''
-          }
+          role: userData.role || { id: 0, name: 'Authenticated', description: '' }
         };
 
         setUser(user);
@@ -299,6 +298,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  // Tambahkan fungsi untuk memperbarui data user di context dan localStorage
+  const updateUser = (partial: Partial<User>) => {
+    setUser((prev) => {
+      const next = { ...(prev || {}), ...partial } as User;
+      try {
+        localStorage.setItem('folearn_user', JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+    if (partial.jwt) {
+      try {
+        localStorage.setItem('folearn_jwt', partial.jwt);
+        // Set header Authorization juga jika JWT berubah
+        axios.defaults.headers.common['Authorization'] = `Bearer ${partial.jwt}`;
+      } catch {}
+    }
+  };
+
   const value: AuthContextType = {
     user,
     login,
@@ -309,7 +326,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: !!user,
     isLoading,
     // Consider user as "student" if authenticated with valid role (not an admin/super-admin)
-    isStudent: !!user?.role?.name
+    isStudent: !!user?.role?.name,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
